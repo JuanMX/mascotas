@@ -4,25 +4,27 @@ namespace Database\Factories;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Helper;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Mascota>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pet>
  */
-class MascotaFactory extends Factory
+class PetFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
+    
     public function definition(): array
     {
-        $pet_type = ['PERRO', 'GATO', 'AVE', 'PEZ', 'PLANTA']
+        $pet_type = Helper::getPetType();
         return [
             'name' => fake()->firstName(),
-            'age' => rand(0,10),
+            'age' => rand(0,3),
             'type' => $pet_type[rand(0,4)],
-            'creted_at' => now(),
+            'created_at' => now(),
             /*
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
