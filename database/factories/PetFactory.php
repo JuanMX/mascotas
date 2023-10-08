@@ -23,7 +23,7 @@ class PetFactory extends Factory
         return [
             'name' => fake()->firstName(),
             'age' => rand(0,3),
-            'type' => $pet_type[rand(0,4)],
+            'type' => $pet_type[rand(0, count($pet_type) )],
             'created_at' => now(),
             /*
             'name' => fake()->name(),

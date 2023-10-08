@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+@section('plugins.Datatables', true)
     <p>Welcome to this beautiful admin panel.</p>
 
     {{-- Setup data for datatables --}}

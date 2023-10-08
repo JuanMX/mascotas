@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         foreach($pet_type as $type){
             DB::table('pet_types')->insert([
                 'name' => $type,
+                'created_at' => now(),
             ]);
         }
 

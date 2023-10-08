@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +19,8 @@ Route::get('/', function () {
 });
 Route::get('/home', function () {
     return view('welcome');
+});
+
+Route::prefix('catalogue')->group(function () {
+    Route::get('/pettype', [PetController::class, 'index']);
 });
