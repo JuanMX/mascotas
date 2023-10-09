@@ -321,7 +321,7 @@ return [
             'label'       => 4,
             'label_color' => 'success',
         ],
-        */
+        
         ['header' => 'Usuario'],
         [
             'text' => 'profile',
@@ -333,7 +333,7 @@ return [
             'url'  => 'admin/configuracion',
             'icon' => 'fas fa-fw fa-lock',
         ],
-
+        */
         ['header' => 'Mascotas'],
         [
             'text' => 'Administrar Mascotas',
@@ -342,9 +342,9 @@ return [
         ],
         ['header' => 'Adopción'],
         [
-            'text' => 'Adoptar Mascotas',
-            'url'  => 'adopcion/adoptar',
-            'icon' => 'fas fa-fw fa-dog',
+            'text' => 'Solicitud para adoptar',
+            'url'  => 'adopcion/solicitar',
+            'icon' => 'fas fa-hand-holding-heart',
         ],
         [
             'text' => 'Devolver Mascotas',
@@ -353,12 +353,24 @@ return [
             
         ],
         [
-            'text' => 'Buscar registros de adopción',
-            'url'  => 'adopcion/buscar',
-            'icon' => 'fas fa-search',
+            'text' => 'Deliberar solicitudes',
+            'url'  => 'adopcion/deliberar',
+            'icon' => 'fas fa-balance-scale',
             
         ],
-        ['header' => '---'],
+        ['header' => 'Ver solicitudes'],
+        [
+            'text' => 'Solicitudes aceptadas',
+            'url'  => 'solicitud/aceptada',
+            'icon' => 'fas fa-check-circle',
+        ],
+        [
+            'text' => 'Solicitudes rechazadas',
+            'url'  => 'solicitud/rechazada',
+            'icon' => 'fas fa-times-circle',
+            
+        ],
+        ['header' => 'Sistema'],
         [
             'text'    => 'Catálogos',
             'icon'    => 'fas fa-database',
@@ -369,8 +381,8 @@ return [
                 ],
                 
                 [
-                    'text' => 'Dueño de mascota',
-                    'url'  => '#',
+                    'text' => 'Adoptante',
+                    'url'  => 'catalogue/adoptertype',
                 ],
             ],
         ],

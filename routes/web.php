@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\PetTypeController;
+use App\Http\Controllers\AdopterTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +25,8 @@ Route::get('/home', function () {
 
 Route::prefix('catalogue')->group(function () {
     Route::get('/pettype', [PetController::class, 'index']);
+    Route::post('/list-pet-type', [PetTypeController::class, 'listPetType']);
+
+    Route::get('/adoptertype', [AdopterTypeController::class, 'index']);
+    Route::post('/list-adopter-type', [AdopterTypeController::class, 'listAdopterType']);
 });

@@ -1,16 +1,16 @@
 @extends('adminlte::page')
 
-@section('title', 'Tipos de mascota')
+@section('title', 'Tipos de adoptante')
 
 @section('content_header')
-    <h1>Tipos de mascota</h1>
+    <h1>Tipos de adoptante</h1>
 @stop
 
 @section('content')
 @section('plugins.Datatables', true)
     
     </div>
-        <table id="table-pet-type" class="table table-hover">
+        <table id="table-adopter-type" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -31,14 +31,14 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
-        datatableUsuario = $('#table-pet-type').DataTable({
+        datatableUsuario = $('#table-adopter-type').DataTable({
             "language": {
                 //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
             },  
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "list-pet-type",
+                url: "list-adopter-type",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

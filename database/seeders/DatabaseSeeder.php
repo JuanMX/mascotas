@@ -19,13 +19,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $pet_type = Helper::getPetType();
+        $adopter_type = Helper::getAdopterType();
         
-        Pet::factory()
-            ->count(10)
-            ->create();
+        Pet::factory()->count(10)->create();
 
         foreach($pet_type as $type){
             DB::table('pet_types')->insert([
+                'name' => $type,
+                'created_at' => now(),
+            ]);
+        }
+
+        foreach($adopter_type as $type){
+            DB::table('adopter_types')->insert([
                 'name' => $type,
                 'created_at' => now(),
             ]);
