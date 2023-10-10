@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 250);
             $table->string('type', 250);
-            $table->float('age', 3, 2);
+            $table->float('age', 5, 2);
+            $table->integer('status');
+            $table->text('note');
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at');
         });

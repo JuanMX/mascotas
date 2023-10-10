@@ -337,7 +337,7 @@ return [
         ['header' => 'Mascotas'],
         [
             'text' => 'Administrar Mascotas',
-            'url'  => 'macota/administrar',
+            'url'  => 'pet',
             'icon' => 'fas fa-fw fa-paw',
         ],
         ['header' => 'Adopción'],
@@ -356,6 +356,12 @@ return [
             'text' => 'Deliberar solicitudes',
             'url'  => 'adopcion/deliberar',
             'icon' => 'fas fa-balance-scale',
+            
+        ],
+        [
+            'text' => 'Historiales',
+            'url'  => 'adoption/historic',
+            'icon' => 'fas fa-tasks',
             
         ],
         ['header' => 'Ver solicitudes'],

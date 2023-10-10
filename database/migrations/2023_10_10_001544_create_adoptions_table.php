@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adopter_types', function (Blueprint $table) {
+        Schema::create('adoptions', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 250);
+            //id_adopter
+            //id_pet
+            //action
+            //note
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at');
         });
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('adopter_types');
+        Schema::dropIfExists('adoptions');
     }
 };
