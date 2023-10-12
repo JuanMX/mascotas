@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Historical')
+@section('title', 'Timeline')
 
 @section('content_header')
-    <h1>Historical</h1>
+    <h2>Timeline</h2>
 @stop
 
 @section('content')
@@ -42,7 +42,7 @@
             <tbody></tbody>
         </table>
     </div>
-@include('adoption.modals.historicaltimeline')
+@include('adoption.modals.timeline')
 @stop
 
 @section('css')
@@ -118,7 +118,7 @@
         postFormData.append("id", data['id']);
         
         $.ajax({
-            url: 'historical-pet',
+            url: 'timeline-pet',
             type: 'POST',
             dataType: 'json',
             data: postFormData,

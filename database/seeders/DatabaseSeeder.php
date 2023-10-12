@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use App\Models\PetType;
 use App\Models\Pet;
 
@@ -18,17 +19,18 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        $pet_type = Helper::getPetType();
-        $adopter_type = Helper::getAdopterType();
-        
         Pet::factory()->count(10)->create();
+        
+        $currentDate = Carbon::now();
+        $agoDate = $currentDate->subDays($currentDate->dayOfWeek)->subWeek();
+        
         DB::table('pets')->insert([
             'name' => 'Queso',
             'age' => rand(0,3),
             'type' => 'DOG',
             'status' => 0,
             'note' => 'Mascota muy juguetona',
-            'created_at' => now(),
+            'created_at' => $agoDate,
         ]);
         DB::table('pets')->insert([
             'name' => 'Chester',
@@ -36,9 +38,39 @@ class DatabaseSeeder extends Seeder
             'type' => 'DOG',
             'status' => 0,
             'note' => 'Es un poco agresivo, sería ideal como perro cuidador',
-            'created_at' => now(),
+            'created_at' => $agoDate,
+        ]);
+
+        DB::table('adopters')->insert([
+            'forename' => 'Juan',
+            'surname' => 'MX',
+            'address' => 'Calle falsa 1234',
+            'phone' => '0123456789',
+            'email' => 'juan@mail.com',
+            'age' => 30,
+            'status' => 0,
+            'created_at' => Carbon::yesterday(),
+        ]);
+
+        DB::table('adoptions')->insert([
+            'adopter_id' => 1,
+            'pet_id' => 12,
+            'status' => 0,
+            'note' => 'Solicitada una adopcion con la documentacion necesaria',
+            'created_at' => Carbon::yesterday(),
+        ]);
+
+        DB::table('adoptions')->insert([
+            'adopter_id' => 1,
+            'pet_id' => 12,
+            'status' => 1,
+            'note' => 'Aceptada la adopcion de Chester',
+            'created_at' => Carbon::now(),
         ]);
         
+
+        $pet_type = Helper::getPetType();
+        $adopter_type = Helper::getAdopterType();
 
         foreach($pet_type as $type){
             DB::table('pet_types')->insert([

@@ -28,11 +28,11 @@ Route::get('/pet', [PetController::class, 'index']);
 Route::post('/list-pet', [PetController::class, 'listPet']);
 
 Route::prefix('adoption')->group(function () {
-    Route::get('/historical', [AdoptionController::class, 'index']);
+    Route::get('/timeline', [AdoptionController::class, 'index']);
     Route::post('/list-all-pets', [PetController::class, 'listAllPets']);
     Route::post('/list-all-adopters', [AdopterController::class, 'listAllAdopters']);
 
-    Route::post('/historical-pet', [AdoptionController::class, 'historicalPet']);
+    Route::post('/timeline-pet', [AdoptionController::class, 'timelinePet']);
 
 });
 

@@ -19,10 +19,10 @@ class AdoptionController extends Controller
 {
     public function index(): View
     {
-        return view('adoption.indexhistorical');
+        return view('adoption.indextimeline');
     }
 
-    public function historicalPet(Request $request){
+    public function timelinePet(Request $request){
 
         $jsonReturn = array('success'=>false, 'pet_arrival'=>[], 'data'=>[]);
         
@@ -44,7 +44,7 @@ class AdoptionController extends Controller
             $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
             foreach($petHistorical as $historical){
                 //myTODO cambiar de action a status despues
-                if($historical['action'] == 0){
+                if($historical['status'] == 0){
                     
                     $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-blue">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
                     
@@ -56,7 +56,7 @@ class AdoptionController extends Controller
 
                     $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
                 }
-                else if($historical['action'] == 1){
+                else if($historical['status'] == 1){
                     $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-green">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-check-circle bg-green"></i><div class="timeline-item"><h3 class="timeline-header">';
@@ -67,7 +67,7 @@ class AdoptionController extends Controller
 
                     $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
                 }
-                else if($historical['action'] == 2){
+                else if($historical['status'] == 2){
                     $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-red">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-times-circle bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';
@@ -78,7 +78,7 @@ class AdoptionController extends Controller
 
                     $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
                 }
-                else if($historical['action'] == 3){
+                else if($historical['status'] == 3){
                     $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-yellow">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-heart-broken bg-yellow"></i><div class="timeline-item"><h3 class="timeline-header">';
@@ -89,7 +89,7 @@ class AdoptionController extends Controller
 
                     $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
                 }
-                else if($historical['action'] == 4){
+                else if($historical['status'] == 4){
                     $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-red">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-ban bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';

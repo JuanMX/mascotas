@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone', 250)->nullable();
             $table->string('email', 250)->nullable();
             $table->integer('age');
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

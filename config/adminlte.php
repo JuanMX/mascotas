@@ -359,8 +359,8 @@ return [
             
         ],
         [
-            'text' => 'Historicals',
-            'url'  => 'adoption/historical',
+            'text' => 'Pet and Adopter Timeline',
+            'url'  => 'adoption/timeline',
             'icon' => 'fas fa-tasks',
             
         ],
