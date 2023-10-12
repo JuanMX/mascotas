@@ -21,7 +21,7 @@ class PetController extends Controller
         
         try {
             //get not adopted pets
-            $jsonReturn['data'] = Pet::all()->toArray();
+            $jsonReturn['data'] = Pet::all()->where('status',0)->toArray();
             $jsonReturn['success'] = True;
         } catch(Exception $e) {
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());

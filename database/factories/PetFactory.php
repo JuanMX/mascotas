@@ -24,6 +24,8 @@ class PetFactory extends Factory
             'name' => fake()->firstName(),
             'age' => rand(0,3),
             'type' => $pet_type[rand(0, count($pet_type)-1 )],
+            'status' => 0,
+            'note' => 'Mascota en perfecto estado de salud',
             'created_at' => now(),
             /*
             'name' => fake()->name(),

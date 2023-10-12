@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Tipos de adoptante')
+@section('title', 'Adopter Type')
 
 @section('content_header')
-    <h1>Tipos de adoptante</h1>
+    <h2>Adopter Type</h2>
 @stop
 
 @section('content')

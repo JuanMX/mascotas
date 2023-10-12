@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('adoptions', function (Blueprint $table) {
             $table->id();
-            //id_adopter
-            //id_pet
-            //action
-            //note
+            $table->unsignedBigInteger('adopter_id');
+            $table->foreign('adopter_id')->references('id')->on('adopters');
+            //$table->unsignedBigInteger('user_id');
+            $table->foreignId('pet_id')->constrained();
+            $table->integer('status');
+            $table->text('note')->nullable();
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at');
         });

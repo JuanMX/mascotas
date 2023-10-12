@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Pets')
+@section('title', 'Manage Pets')
 
 @section('content_header')
-    <h1>Pets</h1>
+    <h2>Manage Pets</h2>
 @stop
 
 @section('content')
@@ -17,6 +17,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Age</th>
+                    <th>Note</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -62,6 +63,9 @@
                 },
                 {
                     "data": "age",
+                },
+                {
+                    "data": "note",
                 },
                 {
                     "data": "id",

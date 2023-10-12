@@ -22,6 +22,23 @@ class DatabaseSeeder extends Seeder
         $adopter_type = Helper::getAdopterType();
         
         Pet::factory()->count(10)->create();
+        DB::table('pets')->insert([
+            'name' => 'Queso',
+            'age' => rand(0,3),
+            'type' => 'DOG',
+            'status' => 0,
+            'note' => 'Mascota muy juguetona',
+            'created_at' => now(),
+        ]);
+        DB::table('pets')->insert([
+            'name' => 'Chester',
+            'age' => rand(0,3),
+            'type' => 'DOG',
+            'status' => 0,
+            'note' => 'Es un poco agresivo, sería ideal como perro cuidador',
+            'created_at' => now(),
+        ]);
+        
 
         foreach($pet_type as $type){
             DB::table('pet_types')->insert([

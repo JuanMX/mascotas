@@ -334,9 +334,9 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         */
-        ['header' => 'Mascotas'],
+        ['header' => 'Pets'],
         [
-            'text' => 'Administrar Mascotas',
+            'text' => 'Manage Pets',
             'url'  => 'pet',
             'icon' => 'fas fa-fw fa-paw',
         ],
@@ -359,8 +359,8 @@ return [
             
         ],
         [
-            'text' => 'Historiales',
-            'url'  => 'adoption/historic',
+            'text' => 'Historicals',
+            'url'  => 'adoption/historical',
             'icon' => 'fas fa-tasks',
             
         ],
@@ -376,18 +376,18 @@ return [
             'icon' => 'fas fa-times-circle',
             
         ],
-        ['header' => 'Sistema'],
+        ['header' => 'System'],
         [
-            'text'    => 'Catálogos',
+            'text'    => 'Catalogues',
             'icon'    => 'fas fa-database',
             'submenu' => [
                 [
-                    'text' => 'Mascota',
+                    'text' => 'Pet',
                     'url'  => 'catalogue/pettype',
                 ],
                 
                 [
-                    'text' => 'Adoptante',
+                    'text' => 'Adopter',
                     'url'  => 'catalogue/adoptertype',
                 ],
             ],

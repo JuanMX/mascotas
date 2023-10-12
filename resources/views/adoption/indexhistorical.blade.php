@@ -1,15 +1,16 @@
 @extends('adminlte::page')
 
-@section('title', 'Historic')
+@section('title', 'Historical')
 
 @section('content_header')
-    <h1>Historic</h1>
+    <h1>Historical</h1>
 @stop
 
 @section('content')
 @section('plugins.Datatables', true)
     
-    </div>
+    <h2>Pets Table</h2>
+    <div>
         <table id="table-all-pets" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
@@ -17,6 +18,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Age</th>
+                    <th>Note</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -24,18 +26,23 @@
         </table>
     </div>
 
-    </div>
+    <h2 class="pt-5">Adopters Table</h2>
+    <div>
         <table id="table-all-adopters" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>email</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
+@include('adoption.modals.historicaltimeline')
 @stop
 
 @section('css')
@@ -77,10 +84,13 @@
                     "data": "age",
                 },
                 {
+                    "data": "note",
+                },
+                {
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm btn-primary btn-watch" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Watch"><i class="far fa-eye" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm btn-primary btn-timeline" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Watch Historical"><i class="far fa-eye" aria-hidden="true"></i></button>`;
                     }
                 }
             ]
@@ -94,6 +104,49 @@
             }
             return true;
         });
+    
+
+    $('#table-all-pets tbody').off('click', 'button.btn-timeline');
+    $('#table-all-pets tbody').on('click', 'button.btn-timeline', function(event) {
+        event.preventDefault();
+
+        var currentRow = $(this).closest("tr");
+        var data = $('#table-all-pets').DataTable().row(currentRow).data();
+
+        postFormData = new FormData();
+        postFormData.append("_token", $("#_token").val());
+        postFormData.append("id", data['id']);
+        
+        $.ajax({
+            url: 'historical-pet',
+            type: 'POST',
+            dataType: 'json',
+            data: postFormData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
+            beforeSend: function() {
+            }
+        })
+        .always(function() {
+
+        })
+        .done(function(response) {
+            if(response.success) {
+                console.log(response);
+                $('#modalCustom').find('.modal-title').text(response.pet_arrival.name + '\'s Historical');
+                $('#modalCustom').find('.modal-body').html(response.data);
+                $('#modalCustom').modal('show');
+                
+            } else {
+                //muestraErrores(response, '');
+            }
+        })
+        .fail(function() {
+            //mensajeOcurrioIncidente();
+        });
+
+    });
+
     });
 </script>
 @stop

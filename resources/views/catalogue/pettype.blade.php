@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Tipos de mascota')
+@section('title', 'Pet Type')
 
 @section('content_header')
-    <h1>Tipos de mascota</h1>
+    <h2>Pet Type</h2>
 @stop
 
 @section('content')

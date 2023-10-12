@@ -35,7 +35,7 @@ class Helper
     public static function getPetStatus(){
 
         $pet_status = [
-            0 => 'NO ADOPTED',
+            0 => 'NOT ADOPTED',
             1 => 'ADOPTED',
             2 => 'REMOVED',
         ];
@@ -46,8 +46,11 @@ class Helper
     public static function getAdoptionStatus(){
 
         $adoption_status = [
-            0 => 'ADOPT',
-            1 => 'RETURN',
+            0 => 'REQUEST ADOPTION',
+            1 => 'ACCEPTED ADOPTION',
+            2 => 'REJECTED ADOPTION',
+            3 => 'RETURN PET',
+            4 => 'REJECT REGISTER',
         ];
 
         return $adoption_status;
