@@ -49,6 +49,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'juan@mail.com',
             'age' => 30,
             'status' => 0,
+            'type' => 0,
             'created_at' => Carbon::yesterday(),
         ]);
 

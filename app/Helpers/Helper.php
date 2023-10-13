@@ -50,7 +50,8 @@ class Helper
             1 => 'ACCEPTED ADOPTION',
             2 => 'REJECTED ADOPTION',
             3 => 'RETURN PET',
-            4 => 'REJECT REGISTER',
+            4 => 'REJECT REGISTER ADOPTER',
+            5 => 'REJECT REGISTER PET',
         ];
 
         return $adoption_status;

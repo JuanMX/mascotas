@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\PetTypeController;
 use App\Http\Controllers\AdopterTypeController;
@@ -33,6 +34,7 @@ Route::prefix('adoption')->group(function () {
     Route::post('/list-all-adopters', [AdopterController::class, 'listAllAdopters']);
 
     Route::post('/timeline-pet', [AdoptionController::class, 'timelinePet']);
+    Route::post('/timeline-adopter', [AdoptionController::class, 'timelineAdopter']);
 
 });
 

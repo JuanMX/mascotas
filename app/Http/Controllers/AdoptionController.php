@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Pet;
 use App\Models\Adoption;
 use App\Models\Adopter;
@@ -28,9 +28,19 @@ class AdoptionController extends Controller
         
         try {
             $jsonReturn['pet_arrival'] = Pet::find($request->id)->toArray();
-            //join para obtner el nombre del adoptante
-            $petHistorical = Adoption::select('*')->where('pet_id', $request->id)->orderBy('created_at','asc')->get()->toArray();
             
+            $petHistorical_noArray = DB::table('adoptions')
+                ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
+                ->select('adoptions.*', 'adopters.forename', 'adopters.surname')
+                ->where('adoptions.pet_id', $request->id)
+                ->orderBy('adoptions.created_at','asc')
+            ->get();
+
+            $petHistorical_noArray->transform(function($i) {
+                return (array)$i;
+            });
+            $petHistorical = $petHistorical_noArray->toArray();
+
             $htmlTimeline = '<div class="timeline">';
             
             $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-purple">'.Carbon::parse($jsonReturn['pet_arrival']['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
@@ -43,14 +53,14 @@ class AdoptionController extends Controller
 
             $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
             foreach($petHistorical as $historical){
-                //myTODO cambiar de action a status despues
+                
                 if($historical['status'] == 0){
                     
                     $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-blue">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-hand-holding-heart bg-blue"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Requested adoption by ???</h3>';
+                    $htmlTimeline = $htmlTimeline.'Requested adoption by '.$historical['forename']." ".$historical['surname'].'</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -61,7 +71,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-check-circle bg-green"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Accepted adoption for ???</h3>';
+                    $htmlTimeline = $htmlTimeline.'Accepted adoption requested by '.$historical['forename']." ".$historical['surname'].'</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -72,7 +82,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-times-circle bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Rejected Adoption for ???</h3>';
+                    $htmlTimeline = $htmlTimeline.'Rejected adoption requested by '.$historical['forename']." ".$historical['surname'].' </h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -83,7 +93,100 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-heart-broken bg-yellow"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Undo Adoption for ???</h3>';
+                    $htmlTimeline = $htmlTimeline.'Undo Adoption for '.$historical['forename']." ".$historical['surname'].'</h3>';
+
+                    $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
+
+                    $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
+                }
+                else if($historical['status'] == 5){
+                    $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-red">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
+                    
+                    $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-ban bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';
+                    
+                    $htmlTimeline = $htmlTimeline.'Removed pet</h3>';
+
+                    $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
+
+                    $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
+                }
+            }
+            $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-flag-checkered"></i></div></div>';
+            $jsonReturn['success'] = True;
+            $jsonReturn['data'] = $htmlTimeline;
+        } catch(Exception $e) {
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success']=false;
+            $jsonReturn['error'] = array("Something went wrong");
+        }
+
+        return response()->json($jsonReturn);
+    }
+
+
+
+    public function timelineAdopter(Request $request){
+
+        $jsonReturn = array('success'=>false, 'adopter_data'=>[],'data'=>[]);
+        
+        try {
+            $jsonReturn['adopter_data'] = Adopter::find($request->id)->toArray();
+
+            $adopterHistorical_noArray = DB::table('adoptions')
+                ->join('pets', 'pets.id', '=', 'adoptions.pet_id')
+                ->select('adoptions.*', 'pets.name', 'pets.type')
+                ->where('adoptions.adopter_id', $request->id)
+                ->orderBy('adoptions.created_at','asc')
+            ->get();
+
+            $adopterHistorical_noArray->transform(function($i) {
+                return (array)$i;
+            });
+            $adopterHistorical = $adopterHistorical_noArray->toArray();
+
+            $htmlTimeline = '<div class="timeline">';
+            foreach($adopterHistorical as $historical){
+
+                if($historical['status'] == 0){
+                    
+                    $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-blue">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
+                    
+                    $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-hand-holding-heart bg-blue"></i><div class="timeline-item"><h3 class="timeline-header">';
+                    
+                    $htmlTimeline = $htmlTimeline.'Requested adoption for '.$historical['type']." ".$historical['name'].'</h3>';
+
+                    $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
+
+                    $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
+                }
+                else if($historical['status'] == 1){
+                    $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-green">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
+                    
+                    $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-check-circle bg-green"></i><div class="timeline-item"><h3 class="timeline-header">';
+                    
+                    $htmlTimeline = $htmlTimeline.'Accepted adoption for '.$historical['type']." ".$historical['name'].'</h3>';
+
+                    $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
+
+                    $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
+                }
+                else if($historical['status'] == 2){
+                    $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-red">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
+                    
+                    $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-times-circle bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';
+                    
+                    $htmlTimeline = $htmlTimeline.'Rejected Adoption for '.$historical['type']." ".$historical['name'].'</h3>';
+
+                    $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
+
+                    $htmlTimeline = $htmlTimeline.'</div><div class="timeline-footer"></div></div></div>';
+                }
+                else if($historical['status'] == 3){
+                    $htmlTimeline = $htmlTimeline.'<div class="time-label"><span class="bg-yellow">'.Carbon::parse($historical['created_at'])->format('d/M/Y - g:i:s A').'</span></div>';
+                    
+                    $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-heart-broken bg-yellow"></i><div class="timeline-item"><h3 class="timeline-header">';
+                    
+                    $htmlTimeline = $htmlTimeline.'Undo Adoption for '.$historical['type']." ".$historical['name'].'</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -94,7 +197,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-ban bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Removed pet</h3>';
+                    $htmlTimeline = $htmlTimeline.'Removed Adopter</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
