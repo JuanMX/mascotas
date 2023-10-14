@@ -10,6 +10,7 @@ use App\Models\Adoption;
 use App\Models\Adopter;
 use Illuminate\View\View;
 
+use Helper;
 use Illuminate\Support\Carbon;
 
 //omnipresent controller for adoption change status
@@ -31,7 +32,7 @@ class AdoptionController extends Controller
             
             $petHistorical_noArray = DB::table('adoptions')
                 ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
-                ->select('adoptions.*', 'adopters.forename', 'adopters.surname')
+                ->select('adoptions.*', 'adopters.forename', 'adopters.surname', 'adopters.type')
                 ->where('adoptions.pet_id', $request->id)
                 ->orderBy('adoptions.created_at','asc')
             ->get();
@@ -60,7 +61,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-hand-holding-heart bg-blue"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Requested adoption by '.$historical['forename']." ".$historical['surname'].'</h3>';
+                    $htmlTimeline = $htmlTimeline.'Requested adoption by '.$historical['forename']." ".$historical['surname'].' Type '.Helper::getAdopterType()[$historical['type']].'</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -71,7 +72,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-check-circle bg-green"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Accepted adoption requested by '.$historical['forename']." ".$historical['surname'].'</h3>';
+                    $htmlTimeline = $htmlTimeline.'Accepted adoption requested by '.$historical['forename']." ".$historical['surname'].' Type '.Helper::getAdopterType()[$historical['type']].'</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -82,7 +83,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-times-circle bg-red"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Rejected adoption requested by '.$historical['forename']." ".$historical['surname'].' </h3>';
+                    $htmlTimeline = $htmlTimeline.'Rejected adoption requested by '.$historical['forename']." ".$historical['surname'].' Type '.Helper::getAdopterType()[$historical['type']].' </h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -93,7 +94,7 @@ class AdoptionController extends Controller
                     
                     $htmlTimeline = $htmlTimeline.'<div><i class="fas fa-heart-broken bg-yellow"></i><div class="timeline-item"><h3 class="timeline-header">';
                     
-                    $htmlTimeline = $htmlTimeline.'Undo Adoption for '.$historical['forename']." ".$historical['surname'].'</h3>';
+                    $htmlTimeline = $htmlTimeline.'Undo Adoption for '.$historical['forename']." ".$historical['surname'].' Type '.Helper::getAdopterType()[$historical['type']].'</h3>';
 
                     $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 

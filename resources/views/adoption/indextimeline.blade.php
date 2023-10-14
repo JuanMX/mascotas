@@ -39,6 +39,7 @@
                     <th>email</th>
                     <th>Age</th>
                     <th>Status</th>
+                    <th>Type</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -205,6 +206,15 @@
                     }
                 },
                 {
+                    "data": "type",
+                    render: function ( data, type, row ) {
+                        
+                        var adopter_type = @json(Helper::getAdopterType());
+                        //console.log(adopter_status); //print same array 4 times per row o_O
+                        return adopter_type[data];
+                    }
+                },
+                {
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
@@ -250,7 +260,8 @@
             .done(function(response) {
                 if(response.success) {
                     console.log(response);
-                    $('#modalCustom').find('.modal-title').text(response.adopter_data.forename +" "+ response.adopter_data.surname  + '\'s Timeline');
+                    var adopter_type = @json(Helper::getAdopterType());
+                    $('#modalCustom').find('.modal-title').text(response.adopter_data.forename +" "+ response.adopter_data.surname + '\'s Timeline Type ' + adopter_type[response.adopter_data.type]);
                     $('#modalCustom').find('.modal-body').html(response.data);
                     $('#modalCustom').modal('show');
                     
