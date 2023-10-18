@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Chester',
             'age' => rand(0,3),
             'type' => 'DOG',
-            'status' => 0,
+            'status' => 2,
             'note' => 'Es un poco agresivo, sería ideal como perro cuidador',
             'created_at' => $agoDate,
         ]);

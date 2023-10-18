@@ -1,0 +1,23 @@
+.modal-fullscreen-xl{
+    padding: 0 !important;
+}
+.modal-dialog-xl {
+
+width: 100%;
+max-width: none;
+height: 100%;
+margin: 0;
+}
+
+.modal-content-xl {
+height: 100%;
+border: 0;
+border-radius: 0;
+}
+
+.modal-body-xl {
+overflow-y: auto;
+}
+.iframePDF-xl{
+    height: 100%;
+}
