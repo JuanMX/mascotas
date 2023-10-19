@@ -26,13 +26,22 @@ Route::get('/home', function () {
 });
 
 Route::get('/pet', [PetController::class, 'index']);
-Route::post('/list-pet', [PetController::class, 'listPet']);
+
+Route::prefix('pet')->group(function () {
+    Route::post('/list-pets-with-status', [PetController::class, 'listPetsWithStatus']);
+});
 
 Route::prefix('adoption')->group(function () {
-    Route::get('/timeline', [AdoptionController::class, 'index']);
+
     Route::post('/list-all-pets', [PetController::class, 'listAllPets']);
     Route::post('/list-all-adopters', [AdopterController::class, 'listAllAdopters']);
+    
 
+    Route::get('/adopt', [AdoptionController::class, 'indexAdoption']);
+     ////////////////////
+    //Timeline section//
+   ////////////////////
+    Route::get('/timeline', [AdoptionController::class, 'indexTimeline']);
     Route::post('/timeline-pet', [AdoptionController::class, 'timelinePet']);
     Route::post('/timeline-adopter', [AdoptionController::class, 'timelineAdopter']);
 

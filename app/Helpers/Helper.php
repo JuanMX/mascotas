@@ -60,9 +60,9 @@ class Helper
         return $adoption_status;
     }
 
-    public static function getTimelineColor(){
+    public static function getAdoptionColor(){
 
-        $adoption_status = [
+        $color = [
             0 => 'bg-blue',
             1 => 'bg-green',
             2 => 'bg-red',
@@ -72,11 +72,11 @@ class Helper
             6 => 'bg-red',
         ];
 
-        return $adoption_status;
+        return $color;
     }
-    public static function getTimelineIcon(){
+    public static function getAdoptionIcon(){
 
-        $adoption_status = [
+        $icon = [
             0 => 'fas fa-hand-holding-heart',
             1 => 'fas fa-check-circle',
             2 => 'fas fa-times-circle',
@@ -86,13 +86,13 @@ class Helper
             6 => 'fas fa-ban',
         ];
 
-        return $adoption_status;
+        return $icon;
     }
 
-    public static function getTimelineColorArrivalShelter(){
+    public static function getColorArrivalShelter(){
         return 'bg-purple';
     }
-    public static function getTimelineIconArrivalShelter(){
+    public static function getIconArrivalShelter(){
         return 'fas fa-arrow-alt-circle-down';
     }
 
@@ -104,5 +104,8 @@ class Helper
         ];
 
         return $adopter_status;
+    }
+    public static function rootUrl(){
+        return Request::root();
     }
 }

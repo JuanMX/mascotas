@@ -342,8 +342,8 @@ return [
         ],
         ['header' => 'Adopción'],
         [
-            'text' => 'Solicitud para adoptar',
-            'url'  => 'adopcion/solicitar',
+            'text' => 'Apply for adoption',
+            'url'  => 'adoption/adopt',
             'icon' => 'fas fa-hand-holding-heart',
         ],
         [

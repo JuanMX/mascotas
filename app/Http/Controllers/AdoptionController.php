@@ -18,7 +18,12 @@ use Illuminate\Support\Carbon;
 
 class AdoptionController extends Controller
 {
-    public function index(): View
+    public function indexAdoption(): View
+    {
+        return view('adoption.indexadoption');
+    }
+
+    public function indexTimeline(): View
     {
         return view('adoption.indextimeline');
     }

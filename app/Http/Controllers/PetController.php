@@ -15,13 +15,16 @@ class PetController extends Controller
         return view('pet.indexpet');
     }
 
-    public function listPet(Request $request){
-
+    public function listPetsWithStatus(Request $request){
+        //dd($request->status);
         $jsonReturn = array('success'=>false,'data'=>[]);
         
         try {
-            //get not adopted pets
-            $jsonReturn['data'] = Pet::all()->where('status',0)->toArray();
+            $jsonReturn['data'] = DB::table('pets')
+                                    ->select('*')
+                                    ->where('status', $request->status)
+                                    ->get()
+                                    ->toArray();
             $jsonReturn['success'] = True;
         } catch(Exception $e) {
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());

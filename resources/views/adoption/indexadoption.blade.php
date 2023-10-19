@@ -1,18 +1,14 @@
 @extends('adminlte::page')
 
-@section('title', 'Manage Pets')
+@section('title', 'Apply for adoption')
 
 @section('content_header')
-    <h2>Manage Pets</h2>
+    <h2>Apply for adoption</h2>
+    <h4>Choose one of these availible pets</h4>
 @stop
 
 @section('content')
 @section('plugins.Datatables', true)
-@section('plugins.Select2', true)
-    
-    <div class="pb-3">
-        <button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}}" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
-    </div>
     
     </div class="pt-3">
         <table id="table-pet" class="table table-sm table-hover">
@@ -31,11 +27,10 @@
         </table>
     </div>
 
-@include('pet.modals.formPet')
+@include('adoption.modals.formAdopter')
 @stop
 
 @section('css')
-    <link href="{{ secure_asset('css/styles_modal_fullscreen.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
@@ -50,10 +45,11 @@
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "adoption/list-all-pets",
+                url: "{{Request::root()}}"+"/pet/list-pets-with-status",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+                data : { 'status' : 0 },
                 dataType: 'json'
             },
             fail: function (data) {
@@ -89,8 +85,7 @@
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}} btn-edit" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></button>&nbsp;
-                            <button type="button" class="btn btn-sm btn-danger btn-delete" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[0]}} btn-adopt" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Start adoption"><i class="fas fa-hand-holding-heart" aria-hidden="true"></i></button>`;
                     }
                 }
             ]
@@ -156,10 +151,13 @@
             });
         });
 
-        $('#table-pet tbody').off('click', 'button.btn-edit');
-        $('#table-pet tbody').on('click', 'button.btn-edit', function(event) {
+        $('#table-pet tbody').off('click', 'button.btn-adopt');
+        $('#table-pet tbody').on('click', 'button.btn-adopt', function(event) {
             event.preventDefault();
+            var currentRow = $(this).closest("tr");
+            var data = $('#table-pet').DataTable().row(currentRow).data();
 
+            $('#modalMin').find('.modal-title').text("Adopter for " + data['name'] + " Type " + data['type']);
             $('#modalMin').modal('show');
             /*
             var currentRow = $(this).closest("tr");

@@ -36,13 +36,9 @@
     </form>
 
     <x-slot name="footerSlot">
-        <x-adminlte-button label="Save" type="submit" theme="primary" icon="fas fa-lg fa-save" form="formCreate" id="btn-save"/>
+        <x-adminlte-button label="Save" type="submit" class="{{Helper::getColorArrivalShelter()}}" icon="fas fa-lg fa-save" form="formCreate" id="btn-save"/>
         <x-adminlte-button label="Close" theme="secondary" icon="far fa-times-circle" data-dismiss="modal"/>
     </x-slot>
-
-    {{--<button type="button" class="btn btn-secondary btn-sm mt-0" data-bs-dismiss="modal"><i class="far fa-times-circle"></i>&nbsp;Cerrar</button>--}}
-    
-    {{--<button type="submit" class="btn btn-primary btn-sm mt-0" form="formularioCrearUsuarioModal" id="btn_guardarCreacion"><i class="far fa-save"></i> Guardar </button>--}}
 
 </x-adminlte-modal>
             
