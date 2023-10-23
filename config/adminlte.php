@@ -337,7 +337,7 @@ return [
         ['header' => 'Pets'],
         [
             'text' => 'Manage Pets',
-            'url'  => 'pet',
+            'url'  => 'pet/pet',
             'icon' => 'fas fa-fw fa-paw',
         ],
         ['header' => 'Adopción'],
@@ -347,8 +347,8 @@ return [
             'icon' => 'fas fa-hand-holding-heart',
         ],
         [
-            'text' => 'Devolver Mascotas',
-            'url'  => 'adopcion/devolver',
+            'text' => 'Return/Refund pet',
+            'url'  => 'adoption/return',
             'icon' => 'fas fa-heart-broken',
             
         ],

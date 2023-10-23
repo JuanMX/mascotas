@@ -25,9 +25,10 @@ Route::get('/home', function () {
     return view('welcome');
 });
 
-Route::get('/pet', [PetController::class, 'index']);
+
 
 Route::prefix('pet')->group(function () {
+    Route::get('/pet', [PetController::class, 'index']);
     Route::post('/list-pets-with-status', [PetController::class, 'listPetsWithStatus']);
 });
 
@@ -38,6 +39,8 @@ Route::prefix('adoption')->group(function () {
     
 
     Route::get('/adopt', [AdoptionController::class, 'indexAdoption']);
+    Route::get('/return', [AdoptionController::class, 'indexRefund']);
+    Route::post('/adopter-info-for-pet', [AdoptionController::class, 'adopterInfoForPet']);
      ////////////////////
     //Timeline section//
    ////////////////////
