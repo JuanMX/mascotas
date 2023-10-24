@@ -41,6 +41,10 @@ Route::prefix('adoption')->group(function () {
     Route::get('/adopt', [AdoptionController::class, 'indexAdoption']);
     Route::get('/return', [AdoptionController::class, 'indexRefund']);
     Route::post('/adopter-info-for-pet', [AdoptionController::class, 'adopterInfoForPet']);
+
+    Route::get('/deliberate', [AdoptionController::class, 'indexDeliberate']);
+    Route::post('/list-adopt-requests', [AdoptionController::class, 'listAdoptRequests']);
+
      ////////////////////
     //Timeline section//
    ////////////////////

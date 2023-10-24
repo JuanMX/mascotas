@@ -353,8 +353,8 @@ return [
             
         ],
         [
-            'text' => 'Deliberar solicitudes',
-            'url'  => 'adopcion/deliberar',
+            'text' => 'Deliberate requests',
+            'url'  => 'adoption/deliberate',
             'icon' => 'fas fa-balance-scale',
             
         ],
