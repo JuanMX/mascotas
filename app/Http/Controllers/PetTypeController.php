@@ -30,4 +30,19 @@ class PetTypeController extends Controller
 
         return response()->json(['data'=>$jsonReturn['data']]);
     }
+
+    public function editType(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $record = PetType::findOrFail($request->id);
+ 
+        $record->name = $request->name;
+        
+        $record->save();
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
 }

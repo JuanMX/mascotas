@@ -9,18 +9,23 @@
 @section('content')
 @section('plugins.Datatables', true)
     
+    <div class="pb-3">
+        <button type="button" class="btn btn-sm btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
     </div>
-        <table id="table-pet-type" class="table table-hover">
+    </div>
+        <table id="table" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Type</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
+
+@include('catalogue.modals.formPetType')
 @stop
 
 @section('css')
@@ -31,7 +36,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
-        datatableUsuario = $('#table-pet-type').DataTable({
+        datatable = $('#table').DataTable({
             "language": {
                 //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
             },  
@@ -74,6 +79,69 @@
             }
             return true;
         });
+
+        $('#btn-new-record').click(function(event) {
+
+            event.preventDefault();
+
+            $('#formCreate')[0].reset();
+
+            $('#modalMin').modal('show');
+        });
+
+        $('#table tbody').off('click', 'button.btn-edit');
+        $('#table tbody').on('click', 'button.btn-edit', function(event) {
+            event.preventDefault();
+
+            $('#formCreate')[0].reset();
+            $('#modalMin').modal('show');
+            
+            var currentRow = $(this).closest("tr");
+            var data = $('#table').DataTable().row(currentRow).data();
+
+            $('#name').val(data['name']);
+            $('#id').val(data['id']);
+        });
+
+        $('#formCreate').on('submit', function(e){
+            e.preventDefault();
+            
+            postFormData = new FormData();
+            postFormData.append("_token", "{{ csrf_token() }}");
+            postFormData.append("_method", "PATCH");
+            postFormData.append("id", $('#id').val());
+            postFormData.append("name", $('#name').val());
+            
+            $.ajax({
+                url: 'edit-pettype',
+                type: 'POST',
+                dataType: 'json',
+                data: postFormData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,   // tell jQuery not to set contentType
+                beforeSend: function() {
+                    $('#btn-save').prop('disabled',true);
+                    $('#btn-save').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Please wait...');
+                }
+            })
+            .always(function() {
+                $('#btn-save').prop('disabled',false);
+                $('#btn-save').html('<i class="far fa-save"></i> Save');
+            })
+            .done(function(response) {
+                if(response.success) {
+                    $('#table').DataTable().ajax.reload(null, false);
+                    $('#modalMin').modal('hide');
+                    $('#formCreate')[0].reset();
+                } else {
+                    //muestraErrores(response, '');
+                }
+            })
+            .fail(function() {
+                //mensajeOcurrioIncidente();
+            });
+        });
+        
     });
 </script>
 @stop
