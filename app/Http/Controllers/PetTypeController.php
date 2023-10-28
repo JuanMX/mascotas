@@ -31,6 +31,21 @@ class PetTypeController extends Controller
         return response()->json(['data'=>$jsonReturn['data']]);
     }
 
+    public function createType(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $user = PetType::create([
+
+            'name' => $request->name,
+
+        ]);
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
+
     public function editType(Request $request){
         
         $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
@@ -40,6 +55,19 @@ class PetTypeController extends Controller
         $record->name = $request->name;
         
         $record->save();
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
+
+    public function deleteType(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $record = PetType::findOrFail($request->id);
+ 
+        $record->delete();
 
         $jsonReturn['success'] = true;
         

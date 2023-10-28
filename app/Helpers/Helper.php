@@ -1,34 +1,18 @@
 <?php // Code within app\Helpers\Helper.php
 
 namespace App\Helpers;
+use App\Models\PetType;
+use App\Models\AdopterType;
 
 class Helper
 {
     public static function getPetType(){
-
-        $pet_type = [
-            0 => 'DOG',
-            1 => 'BIRD',
-            2 => 'CAT',
-            3 => 'FISH',
-            4 => 'PLANT',
-        ];
-
+        $pet_type = PetType::pluck('name','id')->toArray();
         return $pet_type;
     }
 
     public static function getAdopterType(){
-
-        $adopter_type = [
-            0 => 'PERSON',
-            1 => 'BODEGA',
-            2 => 'NEGOCIO',
-            3 => 'BOMBERO',
-            4 => 'EJERCITO',
-            5 => 'FARM',
-            6 => 'CRIADERO',
-        ];
-        
+        $adopter_type = AdopterType::pluck('name','id')->toArray();
         return $adopter_type;
     }
 

@@ -8,6 +8,7 @@
 
 @section('content')
 @section('plugins.Datatables', true)
+@section('plugins.Sweetalert2', true)
     
     <div class="pb-3">
         <button type="button" class="btn btn-sm btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
@@ -25,7 +26,7 @@
         </table>
     </div>
 
-@include('catalogue.modals.formPetType')
+    @include('catalogue.modals.formSimple')
 @stop
 
 @section('css')
@@ -85,8 +86,9 @@
             event.preventDefault();
 
             $('#formCreate')[0].reset();
-
+            $("[name='_method']").val("POST")
             $('#modalMin').modal('show');
+
         });
 
         $('#table tbody').off('click', 'button.btn-edit');
@@ -94,6 +96,7 @@
             event.preventDefault();
 
             $('#formCreate')[0].reset();
+            $("[name='_method']").val("PATCH")
             $('#modalMin').modal('show');
             
             var currentRow = $(this).closest("tr");
@@ -108,12 +111,14 @@
             
             postFormData = new FormData();
             postFormData.append("_token", "{{ csrf_token() }}");
-            postFormData.append("_method", "PATCH");
+            postFormData.append("_method", $("[name='_method']").val());
             postFormData.append("id", $('#id').val());
             postFormData.append("name", $('#name').val());
+
+            var ajaxURL = $("[name='_method']").val() === "PATCH" ? 'edit-pettype' : 'create-pettype';
             
             $.ajax({
-                url: 'edit-pettype',
+                url: ajaxURL,
                 type: 'POST',
                 dataType: 'json',
                 data: postFormData,
@@ -142,6 +147,51 @@
             });
         });
         
+        $('#table tbody').off('click', 'button.btn-delete');
+        $('#table tbody').on('click', 'button.btn-delete', function(event) {
+            
+            var me=$(this),
+            id=me.attr('value');
+            Swal.fire({
+                title: '¿Continue?',
+                text: "It's a delete action",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Confirm',
+                confirmButtonColor: '#28A745',
+                cancelButtonColor: '#d33',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                reverseButtons: true,
+                preConfirm: function() {
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: 'delete-pettype',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                _token:  "{{ csrf_token() }}",
+                                _method: "DELETE",
+                                id: id
+                            }
+                        }).done(function(data) {
+                            resolve(data);
+                        }).fail(function() {
+                            //mensajeOcurrioIncidente();
+                        });
+                    });
+                }
+            }).then(function(data) {
+                if (data.value.success) {
+                    $('#table').DataTable().ajax.reload(null, false);
+                } else {
+                    //muestraErrores(data.value, '');
+                }
+            });
+        });
     });
 </script>
 @stop

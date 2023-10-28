@@ -30,4 +30,47 @@ class AdopterTypeController extends Controller
 
         return response()->json(['data'=>$jsonReturn['data']]);
     }
+
+    public function createType(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $user = AdopterType::create([
+
+            'name' => $request->name,
+
+        ]);
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
+
+    public function editType(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $record = AdopterType::findOrFail($request->id);
+ 
+        $record->name = $request->name;
+        
+        $record->save();
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
+
+    public function deleteType(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $record = AdopterType::findOrFail($request->id);
+ 
+        $record->delete();
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
 }

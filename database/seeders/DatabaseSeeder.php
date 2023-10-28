@@ -70,8 +70,23 @@ class DatabaseSeeder extends Seeder
         ]);
         
 
-        $pet_type = Helper::getPetType();
-        $adopter_type = Helper::getAdopterType();
+        $pet_type = [
+            0 => 'DOG',
+            1 => 'BIRD',
+            2 => 'CAT',
+            3 => 'FISH',
+            4 => 'PLANT',
+        ];
+
+        $adopter_type = [
+            0 => 'PERSON',
+            1 => 'STORE',
+            2 => 'BUSINESS',
+            3 => 'FIREFIGHTER',
+            4 => 'ARMY',
+            5 => 'FARM',
+            6 => 'HATCHERY',
+        ];
 
         foreach($pet_type as $type){
             DB::table('pet_types')->insert([
