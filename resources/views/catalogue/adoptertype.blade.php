@@ -9,7 +9,9 @@
 @section('content')
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)
-    
+    <x-adminlte-alert theme="info" title="Info" dismissable>
+        Changes made will be reflected in future created and edited records
+    </x-adminlte-alert>
     <div class="pb-3">
         <button type="button" class="btn btn-sm btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
     </div>

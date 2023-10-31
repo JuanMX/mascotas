@@ -11,7 +11,7 @@
     
     <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> &nbsp; Adoption</h2>
     <div>
-        <table id="table-deliberate-adopt" class="table table-sm table-hover">
+        <table id="table-deliberate-adopt" class="table table-sm table-hover table-striped">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -34,7 +34,7 @@
 
     <h2 class="pt-5"><i class="{{Helper::getAdoptionIcon()[3]}}" aria-hidden="true"></i> &nbsp; Return</h2>
     <div>
-        <table id="table-deliberate-return" class="table table-sm table-hover">
+        <table id="table-deliberate-return" class="table table-sm table-hover table-striped">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -115,6 +115,12 @@
                     "data": "phone",
                 },{
                     "data": "type",
+                    render: function ( data, type, row ) {
+                        
+                        var type = {{Js::from(Helper::getAdopterType())}};
+                        
+                        return type[data];
+                    }
                 }, {
                     "data": "age",
                 },{
@@ -142,25 +148,21 @@
                 console.error(message);
             }
             return true;
-        });
-        datatableAdopt.on( 'draw', function () {
+        }).on( 'draw', function () {
             $("#table-deliberate-adopt  > tbody > tr").each(function () {
                 var thisrow = $(this);
 
                 var row = datatableAdopt.row( thisrow );
 
-                if ( row.child.isShown() ) {
-                    // This row is already open - close it
-                    //row.child.hide();
-                    //tr.removeClass('shown');
-                }
-                else {
-                    // Open this row
-                    row.child( format(row.data()) ).show();
-                    thisrow.addClass('shown');
+                if(row.length > 0){
+                    if ( !row.child.isShown() ) {
+                        // Open this row
+                        row.child( format(row.data()) ).show();
+                        thisrow.addClass('shown');
+                    }
                 }
             });
-        })
+        });
 
         /* Formatting function for row details - modify as you need */
         function format ( d ) {
@@ -186,6 +188,114 @@
         });
 
         
+
+        datatableReturn = $('#table-deliberate-return').DataTable({
+            "autoWidth": false,
+            "processing": true,
+            "responsive": false,
+            //"serverSide": true,
+            "language": {
+               // "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },  
+            "searching": true,       
+            "ajax": {
+                type: "POST",
+                url: "list-return-requests",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json'
+            },
+            fail: function (data) {
+                console.log(data);
+            },
+            done: function (data)
+            {
+                console.log(data);
+            },
+            "columns": [
+                {
+                    "width": "1%",
+                    "className":      'details-control',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": '',
+                },
+                {
+                    "data": "name",
+                }, {
+                    "data": "address",
+                },{
+                    "data": "email",
+                }, {
+                    "data": "phone",
+                },{
+                    "data": "type",
+                    render: function ( data, type, row ) {
+                        
+                        var type = {{Js::from(Helper::getAdopterType())}};
+                        
+                        return type[data];
+                    }
+                }, {
+                    "data": "age",
+                },{
+                    "data": "petname",
+                }, {
+                    "data": "pettype",
+                },{
+                    "data": "petnote",
+                },{
+                    "data": "id",
+                    "orderable": false,
+                    render: function ( data, type, row ) {
+                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>&nbsp;
+                            <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>`;
+                    }
+                }
+            ],
+            
+        }).on('error.dt', function(e, settings, techNote, message) {
+            
+            if (typeof techNote === 'undefined') {
+
+            } else {
+                // Se imprime este error en consola, para no mostrar al usuario
+                console.error(message);
+            }
+            return true;
+        }).on( 'draw', function () {
+            $("#table-deliberate-return  > tbody > tr").each(function () {
+                var thisrow = $(this);
+                
+                var row = datatableReturn.row( thisrow );
+
+                if(row.length > 0){
+                    if ( !row.child.isShown() ) {
+                    // Open this row
+                    row.child( format(row.data()) ).show();
+                    thisrow.addClass('shown');
+                    }
+                }
+            });
+        });
+
+        // Add event listener for opening and closing details
+        $('#table-deliberate-return tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = datatableReturn.row( tr );
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        });
     } );
 </script>
 @stop

@@ -66,6 +66,18 @@ class AdoptionController extends Controller
         //dd($adopt_requests);
         return response()->json($jsonReturn);
     }
+
+    public function listReturnRequests(Request $request){
+
+        $jsonReturn['data'] = DB::table('pets')
+            ->join('adoptions', 'pets.id', '=', 'adoptions.pet_id')
+            ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note')
+            ->where('pets.status', 3)
+        ->get()->toArray();
+        //dd($adopt_requests);
+        return response()->json($jsonReturn);
+    }
     
 
     public function indexTimeline(): View
