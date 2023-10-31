@@ -3,12 +3,12 @@
 @section('title', 'Manage Pets')
 
 @section('content_header')
-    <h2>Manage Pets</h2>
+    <h2><i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp;Manage Pets</h2>
 @stop
 
 @section('content')
 @section('plugins.Datatables', true)
-@section('plugins.Select2', true)
+@section('plugins.Sweetalert2', true)
     
     <div class="pb-3">
         <button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}}" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
@@ -69,6 +69,14 @@
                 },
                 {
                     "data": "type",
+                    /*
+                    render: function ( data, type, row ) {
+                        
+                        var pet_type = {{Js::from(Helper::getPetType())}};
+                        
+                        return pet_type[data];
+                    }
+                    */
                 },
                 {
                     "data": "age",
@@ -89,8 +97,14 @@
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}} btn-edit" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></button>&nbsp;
+                        if(row['status']===0){
+                            return `<button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}} btn-edit" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></button>&nbsp;
                             <button type="button" class="btn btn-sm btn-danger btn-delete" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>`;
+
+                        }
+                        else{
+                            return `<span class="badge bg-info text-dark">Can only edit NOT ADOPTED pets</span>`
+                        }
                     }
                 }
             ]
@@ -109,50 +123,46 @@
 
             event.preventDefault();
 
-            //$('#formularioCrearUsuarioModal')[0].reset();
-
-            //$('#modalMin').modal('handleUpdate');
+            $('#formCreate')[0].reset();
+            $("[name='_method']").val("POST")
             $('#modalMin').modal('show');
         });
 
-        $('#form-new-record').on('submit', function(e){
+        $('#formCreate').on('submit', function(e){
 
             e.preventDefault();
 
-            formDataCrearUsuarioModal = new FormData($('#form-new-record')[0]);
+            postFormData = new FormData($('#formCreate')[0]);
+
+            var ajaxURL = $("[name='_method']").val() === "PATCH" ? 'edit' : 'create';
 
             $.ajax({
-                url: 'crearUsuario',
+                url: ajaxURL,
                 type: 'POST',
                 dataType: 'json',
-                data: formDataCrearUsuarioModal,
+                data: postFormData,
                 processData: false,  // tell jQuery not to process the data
                 contentType: false,   // tell jQuery not to set contentType
                 beforeSend: function() {
                     
-                    $('#btn-form-save').prop('disabled',true);
-                    $('#btn-form-save').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Guardando...');
+                    $('#btn-save').prop('disabled',true);
+                    $('#btn-save').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Please wait...');
                 }
             })
             .always(function() {
                 
-                $('#btn-form-save').prop('disabled',false);
-                $('#btn-form-save').html('<i class="far fa-save"></i> Guardar');
+                $('#btn-save').prop('disabled',false);
+                $('#btn-save').html('<i class="far fa-save"></i> Save');
             })
             .done(function(response) {
-                if(response.success) {
-                                            
-                    $('#tablaUsuario').DataTable().ajax.reload(null, false);
-                    $('#modalCrearUsuario').modal('hide');
-                    $('#formularioCrearUsuarioModal')[0].reset();                                    
-                        
-                    
-                } else {
-                    muestraErrores(response, '');
-                }
+      
+                $('#table-pet').DataTable().ajax.reload(null, false);
+                $('#modalMin').modal('hide');
+                $('#formCreate')[0].reset();                                    
+
             })
             .fail(function(response) {
-                mensajeOcurrioIncidente();
+                //mensajeOcurrioIncidente();
             });
         });
 
@@ -160,44 +170,65 @@
         $('#table-pet tbody').on('click', 'button.btn-edit', function(event) {
             event.preventDefault();
 
+            $('#formCreate')[0].reset();
+            $("[name='_method']").val("PATCH")
             $('#modalMin').modal('show');
-            /*
+
             var currentRow = $(this).closest("tr");
-            var data = $('#table-all-adopters').DataTable().row(currentRow).data();
+            var data = $('#table-pet').DataTable().row(currentRow).data();
 
-            postFormData = new FormData();
-            postFormData.append("_token", $("#_token").val());
-            postFormData.append("id", data['id']);
+            $('#name').val(data['name']);
+            $('#type').val(data['type']);
+            $('#age').val(data['age']);
+            $('#status').val(data['status']);
+            $('#note').val(data['note']);
+            $('#id').val(data['id']);
+        });
+
+        $('#table-pet tbody').off('click', 'button.btn-delete');
+        $('#table-pet tbody').on('click', 'button.btn-delete', function(event) {
             
-            $.ajax({
-                url: 'timeline-adopter',
-                type: 'POST',
-                dataType: 'json',
-                data: postFormData,
-                processData: false,  // tell jQuery not to process the data
-                contentType: false,   // tell jQuery not to set contentType
-                beforeSend: function() {
+            var me=$(this),
+            id=me.attr('value');
+            Swal.fire({
+                title: '¿Continue?',
+                text: "It's a delete action",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Confirm',
+                confirmButtonColor: '#28A745',
+                cancelButtonColor: '#d33',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                reverseButtons: true,
+                preConfirm: function() {
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: 'delete',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                _token:  "{{ csrf_token() }}",
+                                _method: "DELETE",
+                                id: id
+                            }
+                        }).done(function(data) {
+                            resolve(data);
+                        }).fail(function() {
+                            //mensajeOcurrioIncidente();
+                        });
+                    });
                 }
-            })
-            .always(function() {
-
-            })
-            .done(function(response) {
-                if(response.success) {
-                    console.log(response);
-                    var adopter_type = @json(Helper::getAdopterType());
-                    $('#modalCustom').find('.modal-title').text(response.adopter_data.forename +" "+ response.adopter_data.surname + '\'s Timeline Type ' + adopter_type[response.adopter_data.type]);
-                    $('#modalCustom').find('.modal-body').html(response.data);
-                    $('#modalCustom').modal('show');
-                    
+            }).then(function(data) {
+                if (data.value.success) {
+                    $('#table-pet').DataTable().ajax.reload(null, false);
                 } else {
-                    //muestraErrores(response, '');
+                    //muestraErrores(data.value, '');
                 }
-            })
-            .fail(function() {
-                //mensajeOcurrioIncidente();
             });
-            */
         });
     });
 </script>

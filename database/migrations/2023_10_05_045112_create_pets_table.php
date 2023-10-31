@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
             $table->string('name', 250);
-            $table->string('type', 250);
+            $table->integer('type');
             $table->float('age', 5, 2);
             $table->integer('status')->default(0);
             $table->text('note')->nullable();

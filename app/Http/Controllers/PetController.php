@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pet;
 use Illuminate\View\View;
+use Helper;
 
 class PetController extends Controller
 {
@@ -49,5 +50,53 @@ class PetController extends Controller
         }
 
         return response()->json(['data'=>$jsonReturn['data']]);
+    }
+
+    public function create(Request $request){
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $user = Pet::create([
+            'name'   => $request->name,
+            'type'   => $request->type,
+            'age'    => $request->age,
+            'status' => $request->status,
+            'note'   => $request->note,
+        ]);
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
+
+    public function edit(Request $request){
+
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $record = Pet::findOrFail($request->id);
+ 
+        $record->name   = $request->name;
+        $record->type   = $request->type;
+        $record->age    = $request->age;
+        $record->status = $request->status;
+        $record->note   = $request->note;
+        
+        $record->save();
+
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
+    }
+
+    public function delete(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        $record = Pet::findOrFail($request->id);
+ 
+        $record->delete();
+        
+        $jsonReturn['success'] = true;
+        
+        return response()->json($jsonReturn);
     }
 }

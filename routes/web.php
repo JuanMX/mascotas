@@ -30,6 +30,9 @@ Route::get('/home', function () {
 Route::prefix('pet')->group(function () {
     Route::get('/pet', [PetController::class, 'index']);
     Route::post('/list-pets-with-status', [PetController::class, 'listPetsWithStatus']);
+    Route::post('/create', [PetController::class, 'create']);
+    Route::patch('/edit', [PetController::class, 'edit']);
+    Route::delete('/delete', [PetController::class, 'delete']);
 });
 
 Route::prefix('adoption')->group(function () {
