@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use App\Models\Pet;
 use App\Models\Adoption;
 use App\Models\Adopter;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log; //myTODO put this in all controllers
 
 use Helper;
-use Illuminate\Support\Carbon;
+Use Exception; //myTODO put this in all controllers
 
 //omnipresent controller for adoption change status
 //get data for timeline
@@ -274,6 +276,57 @@ class AdoptionController extends Controller
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
             $jsonReturn['success']=false;
             $jsonReturn['error'] = array("Something went wrong");
+        }
+
+        return response()->json($jsonReturn);
+    }
+
+
+    public function adoptionRequest(Request $request){
+
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        try{
+            DB::transaction(function() use ($request){
+        
+                $adopter = Adopter::firstOrCreate(
+    
+                    [
+                        'forename' => $request->forename, 
+                        'surname' => $request->surname, 
+                        'phone' => $request->phone, 
+                        'type' => $request->type
+                    ],
+    
+                    [
+                        'email' => $request->email, 
+                        'address' => $request->address,
+                        'age' => $request->age,
+                        'status' => 0
+                    ]
+                );
+                $adopter->email = $request->email;
+                $adopter->address = $request->address;
+                $adopter->age = $request->age;
+                $adopter->save();
+    
+                $adoption = Adoption::create([
+                    'adopter_id'   => $adopter->id,
+                    'pet_id'   => $request->petid,
+                    'status' => 0,
+                    'note'   => $request->note,
+                ]);
+    
+                $pet = Pet::findOrFail($request->petid);
+                $pet->status = 1;
+                $pet->save();
+            });
+    
+            $jsonReturn['success'] = true;
+        }catch(Exception $e) {
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Linea: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success']=false;
+            $jsonReturn['error']=array('Something went wrong');
         }
 
         return response()->json($jsonReturn);

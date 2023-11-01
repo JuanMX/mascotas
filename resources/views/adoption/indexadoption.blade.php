@@ -3,12 +3,13 @@
 @section('title', 'Apply for adoption')
 
 @section('content_header')
-    <h2>Apply for adoption</h2>
+    <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> Apply for adoption</h2>
     <h4>Choose one of these availible pets</h4>
 @stop
 
 @section('content')
 @section('plugins.Datatables', true)
+@section('plugins.Sweetalert2', true)
     
     </div class="pt-3">
         <table id="table-pet" class="table table-sm table-hover">
@@ -38,7 +39,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
-        datatableUsuario = $('#table-pet').DataTable({
+        datatable = $('#table-pet').DataTable({
             "language": {
                 //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
             },  
@@ -64,7 +65,7 @@
                     "data": "name",
                 },
                 {
-                    "data": "type",
+                    "data": "type",//myTODO use the helper for pet type
                 },
                 {
                     "data": "age",
@@ -100,102 +101,72 @@
             return true;
         });
 
-        $('#btn-new-record').click(function(event) {
-
-            event.preventDefault();
-
-            //$('#formularioCrearUsuarioModal')[0].reset();
-
-            //$('#modalMin').modal('handleUpdate');
-            $('#modalMin').modal('show');
-        });
-
-        $('#form-new-record').on('submit', function(e){
-
-            e.preventDefault();
-
-            formDataCrearUsuarioModal = new FormData($('#form-new-record')[0]);
-
-            $.ajax({
-                url: 'crearUsuario',
-                type: 'POST',
-                dataType: 'json',
-                data: formDataCrearUsuarioModal,
-                processData: false,  // tell jQuery not to process the data
-                contentType: false,   // tell jQuery not to set contentType
-                beforeSend: function() {
-                    
-                    $('#btn-form-save').prop('disabled',true);
-                    $('#btn-form-save').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Guardando...');
-                }
-            })
-            .always(function() {
-                
-                $('#btn-form-save').prop('disabled',false);
-                $('#btn-form-save').html('<i class="far fa-save"></i> Guardar');
-            })
-            .done(function(response) {
-                if(response.success) {
-                                            
-                    $('#tablaUsuario').DataTable().ajax.reload(null, false);
-                    $('#modalCrearUsuario').modal('hide');
-                    $('#formularioCrearUsuarioModal')[0].reset();                                    
-                        
-                    
-                } else {
-                    muestraErrores(response, '');
-                }
-            })
-            .fail(function(response) {
-                mensajeOcurrioIncidente();
-            });
-        });
-
         $('#table-pet tbody').off('click', 'button.btn-adopt');
         $('#table-pet tbody').on('click', 'button.btn-adopt', function(event) {
+
             event.preventDefault();
             var currentRow = $(this).closest("tr");
             var data = $('#table-pet').DataTable().row(currentRow).data();
 
+            //myTODO remove or use the Helper:: in pet data[type] 
+            $('#formCreate')[0].reset();
             $('#modalMin').find('.modal-title').text("Adopter for " + data['name'] + " Type " + data['type']);
+            $('#petid').val(data['id']);
             $('#modalMin').modal('show');
-            /*
-            var currentRow = $(this).closest("tr");
-            var data = $('#table-all-adopters').DataTable().row(currentRow).data();
 
-            postFormData = new FormData();
-            postFormData.append("_token", $("#_token").val());
-            postFormData.append("id", data['id']);
-            
+        });
+
+        $('#formCreate').on('submit', function(e){
+
+            e.preventDefault();
+
+            postFormData = new FormData($('#formCreate')[0]);
+
             $.ajax({
-                url: 'timeline-adopter',
+                url: 'adoption-request',
                 type: 'POST',
                 dataType: 'json',
                 data: postFormData,
                 processData: false,  // tell jQuery not to process the data
                 contentType: false,   // tell jQuery not to set contentType
                 beforeSend: function() {
+                    
+                    $('#btn-save').prop('disabled',true);
+                    $('#btn-save').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Please wait...');
                 }
             })
             .always(function() {
-
+                
+                $('#btn-save').prop('disabled',false);
+                $('#btn-save').html('<i class="{{Helper::getAdoptionIcon()[0]}}"></i> Request Adoption');
             })
             .done(function(response) {
                 if(response.success) {
-                    console.log(response);
-                    var adopter_type = @json(Helper::getAdopterType());
-                    $('#modalCustom').find('.modal-title').text(response.adopter_data.forename +" "+ response.adopter_data.surname + '\'s Timeline Type ' + adopter_type[response.adopter_data.type]);
-                    $('#modalCustom').find('.modal-body').html(response.data);
-                    $('#modalCustom').modal('show');
+                                            
+                    $('#table-pet').DataTable().ajax.reload(null, false);
+                    $('#modalMin').modal('hide');
+                    $('#formCreate')[0].reset();                                    
+                        
                     
                 } else {
-                    //muestraErrores(response, '');
+                    swal.fire({
+                        title: 'Internal error',
+                        text: "Something went wrong",
+                        type: 'error',
+                        allowOutsideClick: false,
+                        confirmButtonText: 'OK',
+                    });
                 }
             })
-            .fail(function() {
-                //mensajeOcurrioIncidente();
+            .fail(function(response) {
+                swal.fire({
+                    title: 'Internal error',
+                    text: "Something went wrong",
+                    type: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'OK',
+                });
             });
-            */
         });
     });
 </script>

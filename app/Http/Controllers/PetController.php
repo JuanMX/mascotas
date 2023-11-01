@@ -24,6 +24,7 @@ class PetController extends Controller
             $jsonReturn['data'] = DB::table('pets')
                                     ->select('*')
                                     ->where('status', $request->status)
+                                    ->whereNull('deleted_at')
                                     ->get()
                                     ->toArray();
             $jsonReturn['success'] = True;
