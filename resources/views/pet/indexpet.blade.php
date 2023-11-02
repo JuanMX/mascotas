@@ -3,7 +3,7 @@
 @section('title', 'Manage Pets')
 
 @section('content_header')
-    <h2><i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp;Manage Pets</h2>
+    <h2><i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp; Manage Pets</h2>
 @stop
 
 @section('content')

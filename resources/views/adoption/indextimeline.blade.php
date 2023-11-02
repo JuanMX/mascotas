@@ -3,7 +3,7 @@
 @section('title', 'Timeline')
 
 @section('content_header')
-    <h2>Timeline</h2>
+    <h2> <i class="fas fa-tasks" aria-hidden="true"></i> &nbsp; Timeline</h2>
 @stop
 
 @section('content')
@@ -95,7 +95,7 @@
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm btn-primary btn-timeline" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Watch Timeline"><i class="far fa-eye" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm bg-teal btn-timeline" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Watch Timeline"><i class="far fa-eye" aria-hidden="true"></i></button>`;
                     }
                 }
             ]
@@ -218,7 +218,7 @@
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm btn-primary btn-timeline-adopter" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Watch Timeline"><i class="far fa-eye" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm bg-teal btn-timeline-adopter" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Watch Timeline"><i class="far fa-eye" aria-hidden="true"></i></button>`;
                     }
                 }
             ]
