@@ -1,37 +1,37 @@
 @extends('adminlte::page')
 
-@section('title', 'Adopter Type')
+@section('title', 'Catalogues')
 
 @section('content_header')
-    <h2>Adopter Type</h2>
+    <h2>{{$catalogue}}</h2>
 @stop
 
 @section('content')
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)
-    <x-adminlte-alert theme="info" title="Info" dismissable>
-        Changes made will be reflected in future created and edited records
+    <x-adminlte-alert theme="info" title="Changes made will be reflected in future created and edited records" dismissable>
+        
     </x-adminlte-alert>
     <div class="pb-3">
-        <button type="button" class="btn btn-sm btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
+        <button type="button" class="btn btn-md btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
     </div>
     </div>
         <table id="table" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Type</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
+
     @include('catalogue.modals.formSimple')
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
@@ -45,10 +45,11 @@
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "list-adopter-type",
+                url: "read",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+                data : { 'catalogue' : "{{$catalogue}}" },
                 dataType: 'json'
             },
             fail: function (data) {
@@ -115,8 +116,9 @@
             postFormData.append("_method", $("[name='_method']").val());
             postFormData.append("id", $('#id').val());
             postFormData.append("name", $('#name').val());
-
-            var ajaxURL = $("[name='_method']").val() === "PATCH" ? 'edit-adoptertype' : 'create-adoptertype';
+            postFormData.append("catalogue", "{{$catalogue}}");
+            
+            var ajaxURL = $("[name='_method']").val() === "POST" ? 'create' : 'update';
             
             $.ajax({
                 url: ajaxURL,
@@ -147,7 +149,7 @@
                 //mensajeOcurrioIncidente();
             });
         });
-
+        
         $('#table tbody').off('click', 'button.btn-delete');
         $('#table tbody').on('click', 'button.btn-delete', function(event) {
             
@@ -170,13 +172,14 @@
                 preConfirm: function() {
                     return new Promise(function(resolve, reject) {
                         $.ajax({
-                            url: 'delete-adoptertype',
+                            url: 'delete',
                             type: 'POST',
                             dataType: 'json',
                             data: {
                                 _token:  "{{ csrf_token() }}",
                                 _method: "DELETE",
-                                id: id
+                                id: id,
+                                catalogue: "{{$catalogue}}"
                             }
                         }).done(function(data) {
                             resolve(data);

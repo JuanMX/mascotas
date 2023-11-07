@@ -380,15 +380,15 @@ return [
         [
             'text'    => 'Catalogues',
             'icon'    => 'fas fa-database',
-            'submenu' => [
+            'submenu' => [ // url => catalogue/<<table name in database>>
                 [
                     'text' => 'Pet',
-                    'url'  => 'catalogue/pettype',
+                    'url'  => 'catalogue/pet_types',
                 ],
                 
                 [
                     'text' => 'Adopter',
-                    'url'  => 'catalogue/adoptertype',
+                    'url'  => 'catalogue/adopter_types',
                 ],
             ],
         ],

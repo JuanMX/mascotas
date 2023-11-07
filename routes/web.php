@@ -6,6 +6,7 @@ use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\PetTypeController;
 use App\Http\Controllers\AdopterTypeController;
+use App\Http\Controllers\SimpleCatalogueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,15 +62,9 @@ Route::prefix('adoption')->group(function () {
 });
 
 Route::prefix('catalogue')->group(function () {
-    Route::get('/pettype', [PetTypeController::class, 'index']);
-    Route::post('/list-pet-type', [PetTypeController::class, 'listPetType']);
-    Route::post('/create-pettype', [PetTypeController::class, 'createType']);
-    Route::patch('/edit-pettype', [PetTypeController::class, 'editType']);
-    Route::delete('/delete-pettype', [PetTypeController::class, 'deleteType']);
-
-    Route::get('/adoptertype', [AdopterTypeController::class, 'index']);
-    Route::post('/list-adopter-type', [AdopterTypeController::class, 'listAdopterType']);
-    Route::post('/create-adoptertype', [AdopterTypeController::class, 'createType']);
-    Route::patch('/edit-adoptertype', [AdopterTypeController::class, 'editType']);
-    Route::delete('/delete-adoptertype', [AdopterTypeController::class, 'deleteType']);
+    Route::get('/{catalogue}', [SimpleCatalogueController::class, 'index']);
+    Route::post('/create', [SimpleCatalogueController::class, 'create']);
+    Route::post('/read', [SimpleCatalogueController::class, 'read']);
+    Route::patch('/update', [SimpleCatalogueController::class, 'update']);
+    Route::delete('/delete', [SimpleCatalogueController::class, 'delete']);
 });
