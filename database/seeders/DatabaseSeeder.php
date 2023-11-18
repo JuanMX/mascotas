@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         DB::table('pets')->insert([
             'name' => 'Queso',
             'age' => rand(0,3),
-            'type' => 'DOG',
+            'type' => 1,
             'status' => 0,
             'note' => 'Mascota muy juguetona',
             'created_at' => $agoDate,
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         DB::table('pets')->insert([
             'name' => 'Chester',
             'age' => rand(0,3),
-            'type' => 'DOG',
+            'type' => 1,
             'status' => 2,
             'note' => 'Es un poco agresivo, sería ideal como perro cuidador',
             'created_at' => $agoDate,
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'juan@mail.com',
             'age' => 30,
             'status' => 0,
-            'type' => 0,
+            'type' => 1,
             'created_at' => Carbon::yesterday(),
         ]);
 
@@ -71,21 +71,21 @@ class DatabaseSeeder extends Seeder
         
 
         $pet_type = [
-            0 => 'DOG',
-            1 => 'BIRD',
-            2 => 'CAT',
-            3 => 'FISH',
-            4 => 'PLANT',
+            1 => 'DOG',
+            2 => 'BIRD',
+            3 => 'CAT',
+            4 => 'FISH',
+            5 => 'PLANT',
         ];
 
         $adopter_type = [
-            0 => 'PERSON',
-            1 => 'STORE',
-            2 => 'BUSINESS',
-            3 => 'FIREFIGHTER',
-            4 => 'ARMY',
-            5 => 'FARM',
-            6 => 'HATCHERY',
+            1 => 'PERSON',
+            2 => 'STORE',
+            3 => 'BUSINESS',
+            4 => 'FIREFIGHTER',
+            5 => 'ARMY',
+            6 => 'FARM',
+            7 => 'HATCHERY',
         ];
 
         foreach($pet_type as $type){

@@ -22,10 +22,9 @@
             $pet_types = Helper::getPetType();
         @endphp
 
-        <x-adminlte-select name="status" id="status" label="Pet status">
-            <x-adminlte-options :options="$pet_statuses" disabled=""
-                placeholder="Select status"/>
-        </x-adminlte-select>
+        {{--<x-adminlte-select name="status" id="status" label="Pet status">--}}
+        {{--<x-adminlte-options :options="$pet_statuses" disabled="" placeholder="Select status"/>--}}
+        {{--</x-adminlte-select>--}}
 
         <x-adminlte-select name="type" id="type" label="Type of pet">
             <x-adminlte-options :options="$pet_types" disabled=""

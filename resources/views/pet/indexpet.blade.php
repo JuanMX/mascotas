@@ -3,31 +3,31 @@
 @section('title', 'Manage Pets')
 
 @section('content_header')
-    <h2><i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp; Manage Pets</h2>
+    <h2><i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp; Manage Pets </h2> 
 @stop
 
 @section('content')
-@section('plugins.Datatables', true)
-@section('plugins.Sweetalert2', true)
+    <x-adminlte-alert theme="info" title="You can only work on not adopted pets" dismissable></x-adminlte-alert>
     
     <div class="pb-3">
-        <button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}}" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
+        <button type="button" class="btn btn-md {{Helper::getColorArrivalShelter()}}" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
     </div>
     
-    </div class="pt-3">
-        <table id="table-pet" class="table table-sm table-hover">
+    <div class="pt-3 pb-3">
+        <table id="table-pet" class="table table-sm table-hover" style="width: 100%;">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Age</th>
-                    <th>Status</th>
-                    <th>Note</th>
-                    <th>Actions</th>
+                    <th> Name       </th>
+                    <th> Type       </th>
+                    <th> Age        </th>
+                    <th> Status     </th>
+                    <th> Note       </th>
+                    <th> Actions    </th>
+                    <th> Updated At </th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody> </tbody>
         </table>
     </div>
 
@@ -35,25 +35,26 @@
 @stop
 
 @section('css')
-    <link href="{{ secure_asset('css/styles_modal_fullscreen.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="/css/admin_custom.css">
+
 @stop
 
 @section('js')
+<script src="{{ secure_asset('js/helper_swal.js') }}?v={{ env('VERSION_CSS_JS') }}"></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
-        datatableUsuario = $('#table-pet').DataTable({
+        dataTable = $('#table-pet').DataTable({
             "language": {
                 //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
             },  
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "{{Request::root()}}"+"/adoption/list-all-pets",
+                url: "/pet/list-pets-with-status",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+                data : { 'status' : 0 },
                 dataType: 'json'
             },
             fail: function (data) {
@@ -69,14 +70,14 @@
                 },
                 {
                     "data": "type",
-                    /*
+                    
                     render: function ( data, type, row ) {
                         
                         var pet_type = {{Js::from(Helper::getPetType())}};
                         
                         return pet_type[data];
                     }
-                    */
+                    
                 },
                 {
                     "data": "age",
@@ -106,6 +107,18 @@
                             return `<span class="badge bg-info text-dark">Can only edit NOT ADOPTED pets</span>`
                         }
                     }
+                },
+                {
+                    "data": "updated_at",
+                }
+            ],
+            "order": [
+                [6, 'desc'],
+            ],
+            "columnDefs": [
+                {
+                    targets: [6],
+                    visible: false
                 }
             ]
         }).on('error.dt', function(e, settings, techNote, message) {
@@ -113,7 +126,7 @@
             if (typeof techNote === 'undefined') {
 
             } else {
-                // Se imprime este error en consola, para no mostrar al usuario
+                // Show error in console
                 console.error(message);
             }
             return true;
@@ -162,7 +175,7 @@
 
             })
             .fail(function(response) {
-                //mensajeOcurrioIncidente();
+                swalGenericError();
             });
         });
 
@@ -218,7 +231,7 @@
                         }).done(function(data) {
                             resolve(data);
                         }).fail(function() {
-                            //mensajeOcurrioIncidente();
+                            swalGenericError();
                         });
                     });
                 }
@@ -226,7 +239,7 @@
                 if (data.value.success) {
                     $('#table-pet').DataTable().ajax.reload(null, false);
                 } else {
-                    //muestraErrores(data.value, '');
+                    swalGenericError();
                 }
             });
         });

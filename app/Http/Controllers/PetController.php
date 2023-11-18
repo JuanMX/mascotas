@@ -17,7 +17,7 @@ class PetController extends Controller
     }
 
     public function listPetsWithStatus(Request $request){
-        //dd($request->status);
+
         $jsonReturn = array('success'=>false,'data'=>[]);
         
         try {
@@ -60,7 +60,7 @@ class PetController extends Controller
             'name'   => $request->name,
             'type'   => $request->type,
             'age'    => $request->age,
-            'status' => $request->status,
+            'status' => 0,
             'note'   => $request->note,
         ]);
 
@@ -78,7 +78,6 @@ class PetController extends Controller
         $record->name   = $request->name;
         $record->type   = $request->type;
         $record->age    = $request->age;
-        $record->status = $request->status;
         $record->note   = $request->note;
         
         $record->save();

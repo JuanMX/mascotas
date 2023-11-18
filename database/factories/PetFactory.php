@@ -19,11 +19,10 @@ class PetFactory extends Factory
     
     public function definition(): array
     {
-        $pet_type = Helper::getPetType();
         return [
             'name' => fake()->firstName(),
             'age' => rand(0,3),
-            'type' => $pet_type[rand(0, count($pet_type)-1 )],
+            'type' => rand(1, 4),
             'status' => 0,
             'note' => 'Mascota en perfecto estado de salud',
             'created_at' => now(),

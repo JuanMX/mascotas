@@ -11,7 +11,7 @@
     
     <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> &nbsp; Adoption</h2>
     <div>
-        <table id="table-deliberate-adopt" class="table table-sm table-hover table-striped">
+        <table id="table-deliberate-adopt" class="table table-sm table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -34,7 +34,7 @@
 
     <h2 class="pt-5"><i class="{{Helper::getAdoptionIcon()[3]}}" aria-hidden="true"></i> &nbsp; Return</h2>
     <div>
-        <table id="table-deliberate-return" class="table table-sm table-hover table-striped">
+        <table id="table-deliberate-return" class="table table-sm table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -70,6 +70,7 @@
 @stop
 
 @section('js')
+<script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.4.1/js/dataTables.rowGroup.min.js" defer></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
@@ -133,12 +134,25 @@
                     "data": "id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>&nbsp;
-                            <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>
+                            <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>&nbsp;
+                            <button type="button" class="btn btn-sm bg-blue btn-email" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Send mail asking information...work in progress" disabled aria-disabled="true"><i class="fas fa-envelope" aria-hidden="true"></i></button>`;
+
                     }
                 }
             ],
-            
+            "rowGroup": {
+                dataSrc: ["name", "email"]
+            },
+            "order": [
+                [1, 'asc'],
+            ],
+            "columnDefs": [
+                {
+                    targets: [1,2,3,4,6],
+                    visible: false
+                }
+            ]
         }).on('error.dt', function(e, settings, techNote, message) {
             
             if (typeof techNote === 'undefined') {
