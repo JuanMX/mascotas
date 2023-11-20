@@ -13,7 +13,7 @@ class PetController extends Controller
 {
     public function index(): View
     {
-        return view('pet.indexPet');
+        return view('pet.indexpet');
     }
 
     public function listPetsWithStatus(Request $request){
