@@ -3,25 +3,24 @@
 @section('title', 'Catalogues')
 
 @section('content_header')
-    <h2>{{$catalogue}}</h2>
+    <h2>{{ ucwords( strtolower( str_replace('_',' ',$catalogue) ) ) }}</h2>
 @stop
 
 @section('content')
-@section('plugins.Datatables', true)
-@section('plugins.Sweetalert2', true)
-    <x-adminlte-alert theme="info" title="Changes made will be reflected in future created and edited records" dismissable>
-        
-    </x-adminlte-alert>
+    <x-adminlte-alert id="adminlte-alert" theme="warning" title="Changes made will affect all records" dismissable></x-adminlte-alert>
+
     <div class="pb-3">
         <button type="button" class="btn btn-md btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
     </div>
-    </div>
-        <table id="table" class="table table-hover">
+
+    <div class="pb-5">
+        <table id="table" class="table table-hover" style="width: 100%;">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
                     <th>Type</th>
                     <th>Actions</th>
+                    <th>Updated At</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -35,6 +34,7 @@
 @stop
 
 @section('js')
+<script src="{{ secure_asset('js/helper_swal.js') }}?v={{ env('VERSION_CSS_JS') }}"></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
@@ -50,7 +50,20 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data : { 'catalogue' : "{{$catalogue}}" },
-                dataType: 'json'
+                dataType: 'json',
+                dataSrc: function (data) {
+                    if (!data.success){
+                        myHelper_swalGenericError();
+                        datatable.destroy();
+                        $('#btn-new-record').hide();
+                        $('#adminlte-alert').hide();
+                        data.data = []; //since datatables will be checking for the object as array
+                        return data.data;
+                    }
+                    else{
+                        return data.data;
+                    }
+                } 
             },
             fail: function (data) {
                 console.log(data);
@@ -70,6 +83,18 @@
                         return `<button type="button" class="btn btn-sm btn-primary btn-edit" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></button>&nbsp;
                             <button type="button" class="btn btn-sm btn-danger btn-delete" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>`;
                     }
+                },
+                {
+                    "data": "updated_at",
+                }
+            ],
+            "order": [
+                [2, 'desc'],
+            ],
+            "columnDefs": [
+                {
+                    targets: [2],
+                    visible: false
                 }
             ]
         }).on('error.dt', function(e, settings, techNote, message) {
@@ -77,8 +102,13 @@
             if (typeof techNote === 'undefined') {
 
             } else {
-                // Se imprime este error en consola, para no mostrar al usuario
+                // Show error in console
                 console.error(message);
+                myHelper_swalGenericError();
+                datatable.destroy();
+                $('#btn-new-record').hide();
+                $('#adminlte-alert').hide();
+                
             }
             return true;
         });
@@ -142,11 +172,11 @@
                     $('#modalMin').modal('hide');
                     $('#formCreate')[0].reset();
                 } else {
-                    //muestraErrores(response, '');
+                    myHelper_swalGenericError();
                 }
             })
             .fail(function() {
-                //mensajeOcurrioIncidente();
+                myHelper_swalGenericError();
             });
         });
         
@@ -184,7 +214,7 @@
                         }).done(function(data) {
                             resolve(data);
                         }).fail(function() {
-                            //mensajeOcurrioIncidente();
+                            myHelper_swalGenericError();
                         });
                     });
                 }
@@ -192,7 +222,7 @@
                 if (data.value.success) {
                     $('#table').DataTable().ajax.reload(null, false);
                 } else {
-                    //muestraErrores(data.value, '');
+                    myHelper_swalGenericError();
                 }
             });
         });

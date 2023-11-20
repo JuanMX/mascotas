@@ -92,6 +92,7 @@ class DatabaseSeeder extends Seeder
             DB::table('pet_types')->insert([
                 'name' => $type,
                 'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 
@@ -99,6 +100,7 @@ class DatabaseSeeder extends Seeder
             DB::table('adopter_types')->insert([
                 'name' => $type,
                 'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 

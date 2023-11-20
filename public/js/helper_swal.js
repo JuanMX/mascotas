@@ -1,4 +1,4 @@
-function swalGenericError(){
+function myHelper_swalGenericError(){
     swal.fire({
         title: 'Internal error',
         text: "Something went wrong",

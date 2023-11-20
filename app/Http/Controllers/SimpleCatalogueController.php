@@ -47,7 +47,8 @@ class SimpleCatalogueController extends Controller
         } catch(Exception $e) {
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
             $jsonReturn['success']=false;
-            $jsonReturn['error'] = array("Something went wrong");
+            $jsonReturn['error'] = array("Error reading stored data");
+            return response()->json($jsonReturn, 404);
         }
 
         return response()->json($jsonReturn);

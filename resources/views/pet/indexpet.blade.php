@@ -175,7 +175,7 @@
 
             })
             .fail(function(response) {
-                swalGenericError();
+                myHelper_swalGenericError();
             });
         });
 
@@ -231,7 +231,7 @@
                         }).done(function(data) {
                             resolve(data);
                         }).fail(function() {
-                            swalGenericError();
+                            myHelper_swalGenericError();
                         });
                     });
                 }
@@ -239,7 +239,7 @@
                 if (data.value.success) {
                     $('#table-pet').DataTable().ajax.reload(null, false);
                 } else {
-                    swalGenericError();
+                    myHelper_swalGenericError();
                 }
             });
         });
