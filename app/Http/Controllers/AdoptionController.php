@@ -22,7 +22,7 @@ class AdoptionController extends Controller
 {
     public function indexAdoption(): View
     {
-        return view('adoption.indexadoption');
+        return view('adoption.indexAdoption');
     }
 
     public function indexRefund(): View
