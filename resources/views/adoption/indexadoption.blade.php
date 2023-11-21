@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Apply for adoption')
+@section('title', 'Request adoption')
 
 @section('content_header')
-    <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> Apply for adoption</h2>
+    <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> Request adoption</h2>
     <h4>Choose one of these availible pets</h4>
 @stop
 
@@ -11,7 +11,7 @@
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)
     
-    </div class="pt-3">
+    <div class="pt-3 pb-5">
         <table id="table-pet" class="table table-sm table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
@@ -36,6 +36,7 @@
 @stop
 
 @section('js')
+<script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.4.1/js/dataTables.rowGroup.min.js" defer></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
@@ -65,7 +66,7 @@
                     "data": "name",
                 },
                 {
-                    "data": "type",//myTODO use the helper for pet type
+                    "data": "type",
                 },
                 {
                     "data": "age",
@@ -89,7 +90,31 @@
                         return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[0]}} btn-adopt" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Start adoption"><i class="fas fa-hand-holding-heart" aria-hidden="true"></i></button>`;
                     }
                 }
-            ]
+            ],
+            "rowGroup": {
+                dataSrc: ["type"],
+                startRender: function(rows, group) {
+                    var table = $('#table-pet').DataTable();
+                    var dataSrc = table.rowGroup().dataSrc()
+                    return rows.cell(rows[0], 1).render('display');
+                }
+            },
+            "order": [
+                [1, 'asc'],
+            ],
+            "columnDefs": [
+                {
+                    targets: 1,
+                    visible: true,
+                    render: function(data) {
+
+                        var pet_type = {{Js::from(Helper::getPetType())}};
+                        
+                        return pet_type[data];
+                    }
+                }
+            ],
+            "pageLength": 50
         }).on('error.dt', function(e, settings, techNote, message) {
             
             if (typeof techNote === 'undefined') {
@@ -110,7 +135,7 @@
 
             //myTODO remove or use the Helper:: in pet data[type] 
             $('#formCreate')[0].reset();
-            $('#modalMin').find('.modal-title').text("Adopter for " + data['name'] + " Type " + data['type']);
+            $('#modalMin').find('.modal-title').text("Adopter for " + data['name'] + " Type " + {{Js::from(Helper::getPetType())}}[data['type']]);
             $('#petid').val(data['id']);
             $('#modalMin').modal('show');
 

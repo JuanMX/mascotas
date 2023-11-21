@@ -342,12 +342,12 @@ return [
         ],
         ['header' => 'Adopción'],
         [
-            'text' => 'Apply for adoption',
+            'text' => 'Request adoption',
             'url'  => 'adoption/adopt',
             'icon' => 'fas fa-hand-holding-heart',
         ],
         [
-            'text' => 'Return/Refund pet',
+            'text' => 'Request Return/Refund pet',
             'url'  => 'adoption/return',
             'icon' => 'fas fa-heart-broken',
             
