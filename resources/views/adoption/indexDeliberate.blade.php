@@ -7,7 +7,6 @@
 @stop
 
 @section('content')
-@section('plugins.Datatables', true)
     
     <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> &nbsp; Adoption</h2>
     <div>
@@ -57,7 +56,6 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
     <style>
         td.details-control {
             background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;

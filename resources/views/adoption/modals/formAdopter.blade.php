@@ -10,10 +10,10 @@
         {{-- Basic input --}}
         <div class="row">
             <div class="col">
-                <x-adminlte-input name="forename" id="forename" label="Forename" placeholder="" label-class=""></x-adminlte-input>
+                <x-adminlte-input name="forename" id="forename" label="Forename" placeholder="" label-class="" required=""></x-adminlte-input>
             </div>
             <div class="col">
-                <x-adminlte-input name="surname" id="surname" label="Surname" placeholder="" label-class=""></x-adminlte-input>
+                <x-adminlte-input name="surname" id="surname" label="Surname" placeholder="" label-class="" required=""></x-adminlte-input>
             </div>
         </div>
        
@@ -22,7 +22,7 @@
                 <x-adminlte-input name="phone" id="phone" label="Phone" placeholder="" label-class="" type="tel"></x-adminlte-input>
             </div>
             <div class="col">
-                <x-adminlte-input name="email" id="email" label="email" placeholder="" label-class="" type="email"></x-adminlte-input>
+                <x-adminlte-input name="email" id="email" label="email" placeholder="" label-class="" type="email" required=""></x-adminlte-input>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col">
                 {{-- Input number minimal --}}
-                <x-adminlte-input name="age" id="age" label="Age" placeholder="" type="number"
+                <x-adminlte-input name="age" id="age" label="Age" placeholder="" type="number" required=""
                     min=1 max=999>
                 </x-adminlte-input>
             </div>
@@ -41,7 +41,7 @@
                 @php 
                     $adopter_types = Helper::getAdopterType();
                 @endphp
-                <x-adminlte-select name="type" id="type" label="Type of adopter">
+                <x-adminlte-select name="type" id="type" label="Type of adopter" required="">
                     <x-adminlte-options :options="$adopter_types" disabled=""
                         placeholder="Select type"/>
                 </x-adminlte-select>
@@ -49,9 +49,9 @@
         </div>
 
         {{-- Minimal with placeholder --}}
-        <x-adminlte-textarea label="Address" name="address" id="address" placeholder=""/>
+        <x-adminlte-textarea label="Address" rows=1  name="address" id="address" placeholder="" required=""/>
 
-        <x-adminlte-textarea label="Optional adoption note" name="note" id="note" placeholder=""/>
+        <x-adminlte-textarea label="Optional adoption note" name="note" id="note" placeholder="" required=""/>
 
     </form>
 

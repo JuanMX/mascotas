@@ -6,6 +6,7 @@ use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\SimpleCatalogueController;
 
+use App\Http\Controllers\TestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,6 +58,7 @@ Route::prefix('adoption')->group(function () {
     Route::post('/timeline-pet', [AdoptionController::class, 'timelinePet']);
     Route::post('/timeline-adopter', [AdoptionController::class, 'timelineAdopter']);
 
+    Route::get('/test', [TestController::class, 'testDatatableDetailsControlAllOpen']);
 });
 
 Route::prefix('catalogue')->group(function () {

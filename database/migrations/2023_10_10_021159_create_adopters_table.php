@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('surname', 250);
             $table->text('address');
             $table->string('phone', 250)->nullable();
-            $table->string('email', 250)->nullable();
+            $table->string('email', 250);
             $table->integer('age');
             $table->integer('status')->default(0);
             $table->integer('type');

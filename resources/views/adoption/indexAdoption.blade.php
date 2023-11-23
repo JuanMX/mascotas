@@ -8,8 +8,6 @@
 @stop
 
 @section('content')
-@section('plugins.Datatables', true)
-@section('plugins.Sweetalert2', true)
     
     <div class="pt-3 pb-5">
         <table id="table-pet" class="table table-sm table-hover">
@@ -32,7 +30,7 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+
 @stop
 
 @section('js')
