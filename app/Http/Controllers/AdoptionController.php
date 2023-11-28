@@ -62,8 +62,11 @@ class AdoptionController extends Controller
         $jsonReturn['data'] = DB::table('pets')
             ->join('adoptions', 'pets.id', '=', 'adoptions.pet_id')
             ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
-            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note', 'adopters.id AS adopter_id', 'pets.id AS pet_id')
             ->where('pets.status', 1)
+            ->where('adopters.status', 0)
+            ->whereNull('adopters.deleted_at')
+            ->whereNull('pets.deleted_at')
         ->get()->toArray();
         //dd($adopt_requests);
         return response()->json($jsonReturn);
@@ -237,5 +240,11 @@ class AdoptionController extends Controller
         }
 
         return response()->json($jsonReturn);
+    }
+
+    public function adoptionDeliberated(Request $request){
+        sleep(5);
+        $arr_adopter_pet_0accept_1reject = json_decode($request->arr_adopter_pet_0accept_1reject);
+        dd($arr_adopter_pet_0accept_1reject);
     }
 }

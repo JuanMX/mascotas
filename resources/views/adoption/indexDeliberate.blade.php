@@ -3,24 +3,21 @@
 @section('title', 'Deliberate requests')
 
 @section('content_header')
-    <h2>Deliberate for adopt and return pets</h2>
+    <h2><i class="fas fa-balance-scale" aria-hidden="true"></i> &nbsp; Deliberate for adopt and return pets</h2>
 @stop
 
 @section('content')
-    
+    <x-adminlte-alert theme="info" title="Any action will send an email" dismissable></x-adminlte-alert>
     <h2><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> &nbsp; Adoption</h2>
     <div>
-        <table id="table-deliberate-adopt" class="table table-sm table-hover">
+        <table id="table-deliberate-adopt" class="table table-bordered table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
-                    <th>Note</th>
+                    <th>Adopter Info</th>
                     <th>Name Adopter</th>
-                    <th>Address</th>
                     <th>email</th>
-                    <th>Phone</th>
-                    <th>Type</th>
-                    <th>Age</th>
+                    <th>Note</th>
                     <th>Pet Name</th>
                     <th>Pet Type</th>
                     <th>Pet Recent Note</th>
@@ -69,6 +66,7 @@
 
 @section('js')
 <script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.4.1/js/dataTables.rowGroup.min.js" defer></script>
+<script src="{{ secure_asset('js/helper_swal.js') }}?v={{ env('VERSION_CSS_JS') }}"></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
@@ -106,35 +104,33 @@
                 },
                 {
                     "data": "name",
-                }, {
-                    "data": "address",
-                },{
+                },
+                {
                     "data": "email",
-                }, {
-                    "data": "phone",
-                },{
-                    "data": "type",
-                    render: function ( data, type, row ) {
-                        
-                        var type = {{Js::from(Helper::getAdopterType())}};
-                        
-                        return type[data];
-                    }
-                }, {
-                    "data": "age",
-                },{
+                },
+                {
+                    "data": "note",
+                },
+                {
                     "data": "petname",
                 }, {
                     "data": "pettype",
+                    render: function ( data, type, row ) {
+                        
+                        var type = {{Js::from(Helper::getPetType())}};
+                        
+                        return type[data];
+                    }
                 },{
                     "data": "petnote",
                 },{
-                    "data": "id",
+                    "data": "adopter_id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>
-                            <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>&nbsp;
-                            <button type="button" class="btn btn-sm bg-blue btn-email" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Send mail asking information...work in progress" disabled aria-disabled="true"><i class="fas fa-envelope" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="[${data}, ${row['pet_id']}, true]" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>
+                            <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="[${data}, ${row['pet_id']}, false]" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>&nbsp;
+                            `;
+                            //<button type="button" class="btn btn-sm bg-blue btn-email" value="[${data}, ${row['pet_id']}, 2]" data-toggle="tooltip" data-placement="bottom" title="Send mail asking information...work in progress" disabled aria-disabled="true"><i class="fas fa-envelope" aria-hidden="true"></i></button>
 
                     }
                 }
@@ -142,12 +138,9 @@
             "rowGroup": {
                 dataSrc: ["name", "email"]
             },
-            "order": [
-                [1, 'asc'],
-            ],
             "columnDefs": [
                 {
-                    targets: [1,2,3,4,6],
+                    targets: [1,2],
                     visible: false
                 }
             ]
@@ -160,26 +153,13 @@
                 console.error(message);
             }
             return true;
-        }).on( 'draw', function () {
-            $("#table-deliberate-adopt  > tbody > tr").each(function () {
-                var thisrow = $(this);
-
-                var row = datatableAdopt.row( thisrow );
-
-                if(row.length > 0){
-                    if ( !row.child.isShown() ) {
-                        // Open this row
-                        row.child( format(row.data()) ).show();
-                        thisrow.addClass('shown');
-                    }
-                }
-            });
         });
 
         /* Formatting function for row details - modify as you need */
         function format ( d ) {
             // `d` is the original data object for the row
-            return '<div>'+d.note+'</div>';
+            var type = {{Js::from(Helper::getAdopterType())}};
+            return '<div> More Adopter Info <br> Address: '+d.address+'<br> Phone: '+d.phone+'<br> Adopter Type: '+type[d.type]+'<br>Age: '+d.age+'</div>';
         }
 
         // Add event listener for opening and closing details
@@ -197,6 +177,61 @@
                 row.child( format(row.data()) ).show();
                 tr.addClass('shown');
             }
+        });
+
+        $('#table-deliberate-adopt tbody').off('click', 'button.btn-accept,button.btn-reject');
+        $('#table-deliberate-adopt tbody').on('click', 'button.btn-accept,button.btn-reject', function(event) {
+            event.preventDefault();
+            var currentRow = $(this).closest("tr");
+            var data = $('#table-deliberate-adopt').DataTable().row(currentRow).data();
+
+            var me=$(this),
+            arr_adopter_pet_0accept_1reject=me.attr('value');
+            (async () => {
+                const { value: text } = await Swal.fire({
+                    input: "textarea",
+                    title: "Email message to: "+data['name']+"<br>"+data['email'],
+                    inputPlaceholder: "Any action will send an email ",
+                    inputAttributes: {
+                        "aria-label": "Any action will send an email "
+                    },
+                    showCancelButton: true
+                });
+                if (text) {
+                    
+                    postFormData = new FormData();
+                    postFormData.append("_token", $("#_token").val());
+                    postFormData.append("text", text);
+                    postFormData.append("arr_adopter_pet_0accept_1reject", arr_adopter_pet_0accept_1reject);
+                    $.ajax({
+                        url: 'adoption-deliberated',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: postFormData,
+                        processData: false,  // tell jQuery not to process the data
+                        contentType: false,   // tell jQuery not to set contentType
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: '<span class="spinner-grow spinner-grow" role="status" aria-hidden="true"></span>&nbsp;Sending ...',
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                            });
+                        }
+                    })
+                    .always(function() {
+                        Swal.close();
+                    })
+                    .done(function(response) {
+                        Swal.close();
+                        Swal.fire("Done");
+                    })
+                    .fail(function(response) {
+                        Swal.close();
+                        myHelper_swalGenericError();
+                    });
+                }
+            })()
+            
         });
 
         

@@ -51,6 +51,8 @@ Route::prefix('adoption')->group(function () {
     Route::post('/list-adopt-requests', [AdoptionController::class, 'listAdoptRequests']);
     Route::post('/list-return-requests', [AdoptionController::class, 'listReturnRequests']);
 
+    Route::post('/adoption-deliberated', [AdoptionController::class, 'adoptionDeliberated']);
+
      ////////////////////
     //Timeline section//
    ////////////////////
