@@ -186,9 +186,9 @@
             var data = $('#table-deliberate-adopt').DataTable().row(currentRow).data();
 
             var me=$(this),
-            arr_adopter_pet_0accept_1reject=me.attr('value');
+            arr_idAdopter_idPet_accepted = me.attr('value');
             (async () => {
-                const { value: text } = await Swal.fire({
+                const { value: note } = await Swal.fire({
                     input: "textarea",
                     title: "Email message to: "+data['name']+"<br>"+data['email'],
                     inputPlaceholder: "Any action will send an email ",
@@ -197,12 +197,12 @@
                     },
                     showCancelButton: true
                 });
-                if (text) {
+                if (note) {
                     
                     postFormData = new FormData();
                     postFormData.append("_token", $("#_token").val());
-                    postFormData.append("text", text);
-                    postFormData.append("arr_adopter_pet_0accept_1reject", arr_adopter_pet_0accept_1reject);
+                    postFormData.append("note", note);
+                    postFormData.append("arr_idAdopter_idPet_accepted", arr_idAdopter_idPet_accepted);
                     $.ajax({
                         url: 'adoption-deliberated',
                         type: 'POST',
@@ -224,6 +224,7 @@
                     .done(function(response) {
                         Swal.close();
                         Swal.fire("Done");
+                        $('#table-deliberate-adopt').DataTable().ajax.reload(null, false);
                     })
                     .fail(function(response) {
                         Swal.close();

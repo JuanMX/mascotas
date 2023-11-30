@@ -12,6 +12,9 @@ use App\Models\Adopter;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log; //myTODO put this in all controllers
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AdoptionDeliberation;
+
 use Helper;
 Use Exception; //myTODO put this in all controllers
 
@@ -234,7 +237,7 @@ class AdoptionController extends Controller
     
             $jsonReturn['success'] = true;
         }catch(Exception $e) {
-            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Linea: ' . $e->getLine() . '): ' . $e->getMessage());
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
             $jsonReturn['success']=false;
             $jsonReturn['error']=array('Something went wrong');
         }
@@ -243,8 +246,38 @@ class AdoptionController extends Controller
     }
 
     public function adoptionDeliberated(Request $request){
-        sleep(5);
-        $arr_adopter_pet_0accept_1reject = json_decode($request->arr_adopter_pet_0accept_1reject);
-        dd($arr_adopter_pet_0accept_1reject);
+
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        try{
+            DB::transaction(function() use ($request){
+        
+                $request->arr_idAdopter_idPet_accepted = json_decode($request->arr_idAdopter_idPet_accepted);
+                
+                $adoption = Adoption::create([
+                    'adopter_id'   => $request->arr_idAdopter_idPet_accepted[0],
+                    'pet_id'   => $request->arr_idAdopter_idPet_accepted[1],
+                    'status' => $request->arr_idAdopter_idPet_accepted[2] ? 1 : 2, // see Helper getAdoptionStatus
+                    'note'   => $request->note,
+                ]);
+
+                $pet = Pet::findOrFail($request->arr_idAdopter_idPet_accepted[1]);
+                $pet->status = $request->arr_idAdopter_idPet_accepted[2] ? 2 : 0; // see Helper getPetStatus;
+                $pet->save();
+                
+                $adopter = Adopter::findOrFail($request->arr_idAdopter_idPet_accepted[0]);
+                
+                Mail::to($adopter->email)->send(new AdoptionDeliberation( $adoption, $adopter, $pet ));
+            });
+
+            $jsonReturn['success'] = true;
+        }catch(Exception $e) {
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success']=false;
+            $jsonReturn['error']=array('Error at store data or send the email');
+            return response()->json($jsonReturn, 404);
+        }
+
+        return response()->json($jsonReturn);
     }
 }
