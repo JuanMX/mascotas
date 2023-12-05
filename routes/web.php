@@ -47,11 +47,12 @@ Route::prefix('adoption')->group(function () {
     Route::get('/return', [AdoptionController::class, 'indexRefund']);
     Route::post('/adopter-info-for-pet', [AdoptionController::class, 'adopterInfoForPet']);
 
-    Route::get('/deliberate', [AdoptionController::class, 'indexDeliberate']);
+    Route::get('/deliberate-adoption', [AdoptionController::class, 'indexDeliberate']);
     Route::post('/list-adopt-requests', [AdoptionController::class, 'listAdoptRequests']);
-    Route::post('/list-return-requests', [AdoptionController::class, 'listReturnRequests']);
-
     Route::post('/adoption-deliberated', [AdoptionController::class, 'adoptionDeliberated']);
+
+    Route::get('/deliberate-return', [AdoptionController::class, 'indexDeliberateReturn']);
+    Route::post('/list-return-requests', [AdoptionController::class, 'listReturnRequests']);
 
      ////////////////////
     //Timeline section//

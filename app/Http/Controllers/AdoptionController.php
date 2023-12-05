@@ -280,4 +280,9 @@ class AdoptionController extends Controller
 
         return response()->json($jsonReturn);
     }
+
+    public function indexDeliberateReturn(): View
+    {
+        return view('adoption.indexDeliberateReturn');
+    }
 }

@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Apply for adoption')
+@section('title', 'Return pet')
 
 @section('content_header')
-    <h2>Apply for adoption</h2>
+    <h2>Apply for pet return</h2>
     <h4>Choose one of these availible pets</h4>
 @stop
 
@@ -94,7 +94,7 @@
             if (typeof techNote === 'undefined') {
 
             } else {
-                // Se imprime este error en consola, para no mostrar al usuario
+                // Show error in console
                 console.error(message);
             }
             return true;

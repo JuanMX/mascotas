@@ -3,14 +3,14 @@
 @section('title', 'Deliberate requests')
 
 @section('content_header')
-    <h2><i class="fas fa-balance-scale" aria-hidden="true"></i> &nbsp; Deliberate for adoption pets</h2>
+    <h2><i class="fas fa-balance-scale" aria-hidden="true"></i> &nbsp; Deliberate for return pets</h2>
 @stop
 
 @section('content')
     <x-adminlte-alert theme="info" title="Any action will send an email" dismissable></x-adminlte-alert>
-    <h2 class="pt-2"><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> &nbsp; Adoption</h2>
+    <h2 class="pt-2"><i class="{{Helper::getAdoptionIcon()[3]}}" aria-hidden="true"></i> &nbsp; Return</h2>
     <div>
-        <table id="table-deliberate-adopt" class="table table-bordered table-hover">
+        <table id="table-deliberate-return" class="table table-bordered table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -47,7 +47,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
-        datatableAdopt = $('#table-deliberate-adopt').DataTable({
+        datatableReturn = $('#table-deliberate-return').DataTable({
             "autoWidth": false,
             "processing": true,
             "responsive": false,
@@ -58,7 +58,7 @@
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "list-adopt-requests",
+                url: "list-return-requests",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -107,8 +107,6 @@
                         return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="[${data}, ${row['pet_id']}, true]" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>
                             <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="[${data}, ${row['pet_id']}, false]" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>&nbsp;
                             `;
-                            //<button type="button" class="btn btn-sm bg-blue btn-email" value="[${data}, ${row['pet_id']}, 2]" data-toggle="tooltip" data-placement="bottom" title="Send mail asking information...work in progress" disabled aria-disabled="true"><i class="fas fa-envelope" aria-hidden="true"></i></button>
-
                     }
                 }
             ],
@@ -140,9 +138,9 @@
         }
 
         // Add event listener for opening and closing details
-        $('#table-deliberate-adopt tbody').on('click', 'td.details-control', function () {
+        $('#table-deliberate-return tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
-            var row = datatableAdopt.row( tr );
+            var row = datatableReturn.row( tr );
 
             if ( row.child.isShown() ) {
                 // This row is already open - close it
@@ -156,14 +154,14 @@
             }
         });
 
-        $('#table-deliberate-adopt tbody').off('click', 'button.btn-accept,button.btn-reject');
-        $('#table-deliberate-adopt tbody').on('click', 'button.btn-accept,button.btn-reject', function(event) {
+        $('#table-deliberate-return tbody').off('click', 'button.btn-accept,button.btn-reject');
+        $('#table-deliberate-return tbody').on('click', 'button.btn-accept,button.btn-reject', function(event) {
             event.preventDefault();
             var currentRow = $(this).closest("tr");
-            var data = $('#table-deliberate-adopt').DataTable().row(currentRow).data();
+            var data = $('#table-deliberate-return').DataTable().row(currentRow).data();
 
             var me=$(this),
-            arr_idAdopter_idPet_accepted = me.attr('value');
+            arr_idAdopter_idPet_isAccepted = me.attr('value');
             (async () => {
                 const { value: note } = await Swal.fire({
                     input: "textarea",
@@ -179,9 +177,9 @@
                     postFormData = new FormData();
                     postFormData.append("_token", $("#_token").val());
                     postFormData.append("note", note);
-                    postFormData.append("arr_idAdopter_idPet_accepted", arr_idAdopter_idPet_accepted);
+                    postFormData.append("arr_idAdopter_idPet_isAccepted", arr_idAdopter_idPet_isAccepted);
                     $.ajax({
-                        url: 'adoption-deliberated',
+                        url: 'return-deliberated',
                         type: 'POST',
                         dataType: 'json',
                         data: postFormData,
@@ -200,8 +198,12 @@
                     })
                     .done(function(response) {
                         Swal.close();
-                        Swal.fire("Done");
-                        $('#table-deliberate-adopt').DataTable().ajax.reload(null, false);
+                        Swal.fire({
+                            title: "An email was sent to:",
+                            text: data['email'],
+                            icon: "success"
+                        });
+                        $('#table-deliberate-return').DataTable().ajax.reload(null, false);
                     })
                     .fail(function(response) {
                         Swal.close();

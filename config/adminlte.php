@@ -353,8 +353,14 @@ return [
             
         ],
         [
-            'text' => 'Deliberate requests',
-            'url'  => 'adoption/deliberate',
+            'text' => 'Deliberate ADOPTION requests',
+            'url'  => 'adoption/deliberate-adoption',
+            'icon' => 'fas fa-balance-scale',
+            
+        ],
+        [
+            'text' => 'Deliberate RETURN requests',
+            'url'  => 'adoption/deliberate-return',
             'icon' => 'fas fa-balance-scale',
             
         ],
