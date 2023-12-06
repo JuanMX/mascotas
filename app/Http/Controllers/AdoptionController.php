@@ -21,6 +21,14 @@ Use Exception; //myTODO put this in all controllers
 //omnipresent controller for adoption change status
 // and get data for timeline
 
+/*
+myTODO
+¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?
+for each adoption request delete the previous adoptions in adoptions table
+in order to prevent duplicates in return requests
+¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?
+*/
+
 class AdoptionController extends Controller
 {
     public function indexAdoption(): View
@@ -28,11 +36,12 @@ class AdoptionController extends Controller
         return view('adoption.indexAdoption');
     }
 
-    public function indexRefund(): View
+    public function indexReturn(): View
     {
-        return view('adoption.indexRefund');
+        return view('adoption.indexReturn');
     }
 
+    /*
     public function adopterInfoForPet(Request $request){
 
         $adopter_id = DB::table('adoptions')
@@ -54,7 +63,7 @@ class AdoptionController extends Controller
 
         return response()->json($controller_html);
     }
-    
+    */
     public function indexDeliberate(): View
     {
         return view('adoption.indexDeliberate');
@@ -71,7 +80,27 @@ class AdoptionController extends Controller
             ->whereNull('adopters.deleted_at')
             ->whereNull('pets.deleted_at')
         ->get()->toArray();
-        //dd($adopt_requests);
+        
+        return response()->json($jsonReturn);
+    }
+
+    public function listPetAndItsAdopter(Request $request){
+
+        $jsonReturn = array('success'=>false, 'pet_arrival'=>[], 'data'=>[]);
+
+        $jsonReturn['data'] = DB::table('pets')
+            ->join('adoptions', 'pets.id', '=', 'adoptions.pet_id')
+            ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note', 'adopters.id AS adopter_id', 'pets.id AS pet_id')
+            ->where('pets.status', 2)
+            ->where('adopters.status', 0)
+            ->where('adoptions.status', 0)
+            ->whereNull('adopters.deleted_at')
+            ->whereNull('pets.deleted_at')
+        ->get()->toArray();
+        
+        $jsonReturn['success'] = true;
+
         return response()->json($jsonReturn);
     }
 
@@ -80,10 +109,11 @@ class AdoptionController extends Controller
         $jsonReturn['data'] = DB::table('pets')
             ->join('adoptions', 'pets.id', '=', 'adoptions.pet_id')
             ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
-            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note', 'adopters.id AS adopter_id', 'pets.id AS pet_id')
+            ->where('adopters.status', 0)
             ->where('pets.status', 3)
+            ->where('adoptions.status', 3)
         ->get()->toArray();
-        //dd($adopt_requests);
         return response()->json($jsonReturn);
     }
     
@@ -242,6 +272,36 @@ class AdoptionController extends Controller
             $jsonReturn['error']=array('Something went wrong');
         }
 
+        return response()->json($jsonReturn);
+    }
+
+    public function returnRequest(Request $request){
+        sleep(3);
+        $request->arr_adopterId_petId = json_decode($request->arr_adopterId_petId);
+
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        try{
+            DB::transaction(function() use ($request){
+    
+                $adoption = Adoption::create([
+                    'adopter_id' => $request->arr_adopterId_petId[0],
+                    'pet_id'     => $request->arr_adopterId_petId[1],
+                    'status'     => 3,
+                    'note'       => $request->note,
+                ]);
+    
+                $pet = Pet::findOrFail($request->arr_adopterId_petId[1]);
+                $pet->status = 3;
+                $pet->save();
+            });
+    
+            $jsonReturn['success'] = true;
+        }catch(Exception $e) {
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success']=false;
+            $jsonReturn['error']=array('Something went wrong');
+        }
         return response()->json($jsonReturn);
     }
 

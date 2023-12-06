@@ -33,6 +33,8 @@ Route::prefix('pet')->group(function () {
     Route::post('/create', [PetController::class, 'create']);
     Route::patch('/edit', [PetController::class, 'edit']);
     Route::delete('/delete', [PetController::class, 'delete']);
+
+    Route::post('/list-pet-and-its-adopter', [AdoptionController::class, 'listPetAndItsAdopter']);
 });
 
 Route::prefix('adoption')->group(function () {
@@ -44,8 +46,8 @@ Route::prefix('adoption')->group(function () {
     Route::get('/adopt', [AdoptionController::class, 'indexAdoption']);
     Route::post('/adoption-request', [AdoptionController::class, 'adoptionRequest']);
 
-    Route::get('/return', [AdoptionController::class, 'indexRefund']);
-    Route::post('/adopter-info-for-pet', [AdoptionController::class, 'adopterInfoForPet']);
+    Route::get('/return', [AdoptionController::class, 'indexReturn']);
+    Route::post('/return-request', [AdoptionController::class, 'returnRequest']);
 
     Route::get('/deliberate-adoption', [AdoptionController::class, 'indexDeliberate']);
     Route::post('/list-adopt-requests', [AdoptionController::class, 'listAdoptRequests']);

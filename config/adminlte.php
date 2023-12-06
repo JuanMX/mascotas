@@ -340,7 +340,7 @@ return [
             'url'  => 'pet/pet',
             'icon' => 'fas fa-fw fa-paw',
         ],
-        ['header' => 'Adopción'],
+        ['header' => 'Adoption'],
         [
             'text' => 'Request adoption',
             'url'  => 'adoption/adopt',

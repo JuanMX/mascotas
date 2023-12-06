@@ -1,16 +1,16 @@
 @extends('adminlte::page')
 
-@section('title', 'Deliberate return requests')
+@section('title', 'Return pet')
 
 @section('content_header')
-    <h2><i class="fas fa-balance-scale" aria-hidden="true"></i> &nbsp; Deliberate for return pets</h2>
+    <h2><i class="{{Helper::getAdoptionIcon()[3]}}" aria-hidden="true"></i> &nbsp; Apply for pet return</h2>
 @stop
 
 @section('content')
-    <x-adminlte-alert theme="info" title="Any action will send an email" dismissable></x-adminlte-alert>
-    <h2 class="pt-2"><i class="{{Helper::getAdoptionIcon()[3]}}" aria-hidden="true"></i> &nbsp; Return</h2>
-    <div class="pb-3">
-        <table id="table-deliberate-return" class="table table-bordered table-hover">
+@section('plugins.Datatables', true)
+    
+    <div class="pt-3">
+        <table id="table-pet" class="table table-sm table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -27,6 +27,8 @@
             <tbody></tbody>
         </table>
     </div>
+
+@include('adoption.modals.formReturn')
 @stop
 
 @section('css')
@@ -47,18 +49,14 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
-        datatableReturn = $('#table-deliberate-return').DataTable({
-            "autoWidth": false,
-            "processing": true,
-            "responsive": false,
-            //"serverSide": true,
+        datatable = $('#table-pet').DataTable({
             "language": {
-               // "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
             },  
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "list-return-requests",
+                url: "{{Request::root()}}"+"/pet/list-pet-and-its-adopter",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -100,25 +98,16 @@
                     }
                 },{
                     "data": "petnote",
-                },{
+                },
+                {
                     "data": "adopter_id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[1]}} btn-accept" value="[${data}, ${row['pet_id']}, true]" data-toggle="tooltip" data-placement="bottom" title="Accept"><i class="{{Helper::getAdoptionIcon()[1]}}" aria-hidden="true"></i></button>
-                            <button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[2]}} btn-reject" value="[${data}, ${row['pet_id']}, false]" data-toggle="tooltip" data-placement="bottom" title="Reject"><i class="{{Helper::getAdoptionIcon()[2]}}" aria-hidden="true"></i></button>
-                            `;
+                        return `<button type="button" class="btn btn-sm {{Helper::getAdoptionColor()[3]}} btn-action" value="[${data}, ${row['pet_id']}]" data-toggle="tooltip" data-placement="bottom" title="Start return/refund"><i class="{{Helper::getAdoptionIcon()[3]}}" aria-hidden="true"></i></button>`;
                     }
                 }
             ],
-            "rowGroup": {
-                dataSrc: ["name", "email"]
-            },
-            "columnDefs": [
-                {
-                    targets: [1,2],
-                    visible: false
-                }
-            ]
+            
         }).on('error.dt', function(e, settings, techNote, message) {
             
             if (typeof techNote === 'undefined') {
@@ -134,13 +123,13 @@
         function format ( d ) {
             // `d` is the original data object for the row
             var type = {{Js::from(Helper::getAdopterType())}};
-            return '<div> More Adopter Info <br> Address: '+d.address+'<br> Phone: '+d.phone+'<br> Adopter Type: '+type[d.type]+'<br>Age: '+d.age+'</div>';
+            return '<div class="container-fluid"> More Adopter Info <br> Address: '+d.address+'<br> Phone: '+d.phone+'<br> Adopter Type: '+type[d.type]+'<br>Age: '+d.age+'</div>';
         }
 
         // Add event listener for opening and closing details
-        $('#table-deliberate-return tbody').on('click', 'td.details-control', function () {
+        $('#table-pet tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
-            var row = datatableReturn.row( tr );
+            var row = datatable.row( tr );
 
             if ( row.child.isShown() ) {
                 // This row is already open - close it
@@ -154,21 +143,21 @@
             }
         });
 
-        $('#table-deliberate-return tbody').off('click', 'button.btn-accept,button.btn-reject');
-        $('#table-deliberate-return tbody').on('click', 'button.btn-accept,button.btn-reject', function(event) {
+        $('#table-pet tbody').off('click', 'button.btn-action');
+        $('#table-pet tbody').on('click', 'button.btn-action', function(event) {
             event.preventDefault();
             var currentRow = $(this).closest("tr");
-            var data = $('#table-deliberate-return').DataTable().row(currentRow).data();
-
+            var data = $('#table-pet').DataTable().row(currentRow).data();
             var me=$(this),
-            arr_idAdopter_idPet_isAccepted = me.attr('value');
+            arr_adopterId_petId = me.attr('value');
+
             (async () => {
                 const { value: note } = await Swal.fire({
                     input: "textarea",
-                    title: "Email message to: "+data['name']+"<br>"+data['email'],
-                    inputPlaceholder: "Any action will send an email ",
+                    title: "Please add a note explain your reasons",
+                    inputPlaceholder: "Please add a note explain your reasons",
                     inputAttributes: {
-                        "aria-label": "Any action will send an email "
+                        "aria-label": "Please add a note explain your reasons"
                     },
                     showCancelButton: true
                 });
@@ -177,20 +166,16 @@
                     postFormData = new FormData();
                     postFormData.append("_token", $("#_token").val());
                     postFormData.append("note", note);
-                    postFormData.append("arr_idAdopter_idPet_isAccepted", arr_idAdopter_idPet_isAccepted);
+                    postFormData.append("arr_adopterId_petId", arr_adopterId_petId);
                     $.ajax({
-                        url: 'return-deliberated',
+                        url: 'return-request',
                         type: 'POST',
                         dataType: 'json',
                         data: postFormData,
                         processData: false,  // tell jQuery not to process the data
                         contentType: false,   // tell jQuery not to set contentType
                         beforeSend: function() {
-                            Swal.fire({
-                                title: '<span class="spinner-grow spinner-grow" role="status" aria-hidden="true"></span>&nbsp;Sending ...',
-                                showConfirmButton: false,
-                                allowOutsideClick: false,
-                            });
+                            myHelper_swalWorking();
                         }
                     })
                     .always(function() {
@@ -199,11 +184,11 @@
                     .done(function(response) {
                         Swal.close();
                         Swal.fire({
-                            title: "An email was sent to:",
-                            text: data['email'],
+                            title: "Done",
+                            text: "A return request was created for " + data['name'] + " ( " + data['petname'] + " ) ",
                             type: "success"
                         });
-                        $('#table-deliberate-return').DataTable().ajax.reload(null, false);
+                        $('#table-pet').DataTable().ajax.reload(null, false);
                     })
                     .fail(function(response) {
                         Swal.close();
@@ -211,8 +196,7 @@
                     });
                 }
             })()
-            
         });
-    } );
+    });
 </script>
 @stop
