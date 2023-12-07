@@ -340,6 +340,11 @@ return [
             'url'  => 'pet/pet',
             'icon' => 'fas fa-fw fa-paw',
         ],
+        [
+            'text' => 'Mark pets returning to the shelter',
+            'url'  => 'pet/return',
+            'icon' => 'fas fa-arrow-alt-circle-down',
+        ],
         ['header' => 'Adoption'],
         [
             'text' => 'Request adoption',
@@ -374,18 +379,6 @@ return [
             'text' => 'Pet and Adopter Timeline',
             'url'  => 'adoption/timeline',
             'icon' => 'fas fa-tasks',
-            
-        ],
-        ['header' => 'Ver solicitudes'],
-        [
-            'text' => 'Solicitudes aceptadas',
-            'url'  => 'solicitud/aceptada',
-            'icon' => 'fas fa-check-circle',
-        ],
-        [
-            'text' => 'Solicitudes rechazadas',
-            'url'  => 'solicitud/rechazada',
-            'icon' => 'fas fa-times-circle',
             
         ],
         ['header' => 'System'],

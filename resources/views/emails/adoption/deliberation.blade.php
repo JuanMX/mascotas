@@ -1,7 +1,7 @@
 <x-mail::message>
 # Dear {{ $adopter->forename }}
 
-Your Adoption request was deliberated as: **{{ Helper::getAdoptionStatus()[$adoption->status] }}**.
+Your @if(!$adoption0_return1) Adoption @else Return @endif request was deliberated as: **{{ Helper::getAdoptionStatus()[$adoption->status] }}**.
 
 You can find more details below (*if apply*):
 

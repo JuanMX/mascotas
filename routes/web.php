@@ -55,6 +55,7 @@ Route::prefix('adoption')->group(function () {
 
     Route::get('/deliberate-return', [AdoptionController::class, 'indexDeliberateReturn']);
     Route::post('/list-return-requests', [AdoptionController::class, 'listReturnRequests']);
+    Route::post('/return-deliberated', [AdoptionController::class, 'returnDeliberated']);
 
      ////////////////////
     //Timeline section//

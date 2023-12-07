@@ -24,6 +24,7 @@ class Helper
             2 => 'ADOPTED',
             3 => 'REQUESTED RETURN',
             4 => 'REMOVED',
+            5 => 'ACCEPTED RETURN AND PENDING TO ARRIVE AT THE SHELTER',
         ];
 
         return $pet_status;
@@ -39,6 +40,8 @@ class Helper
             4 => 'RETURNED PET',
             5 => 'REJECTED REGISTER ADOPTER',
             6 => 'REJECTED REGISTER PET',
+            7 => 'ACCEPTED RETURN',
+            8 => 'REJECTED RETURN'
         ];
 
         return $adoption_status;

@@ -24,7 +24,7 @@ class AdoptionDeliberation extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public Adoption $adoption, public Adopter $adopter, public Pet $pet
+        public Adoption $adoption, public Adopter $adopter, public Pet $pet, public int $adoption0_return1
     ){}
 
     /**
@@ -32,9 +32,17 @@ class AdoptionDeliberation extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: 'Adoption Deliberation',
-        );
+        if(!$this->adoption0_return1){
+            return new Envelope(
+                subject: 'Adoption Deliberation',
+            );
+        }
+        else{
+            return new Envelope(
+                subject: 'Return Deliberation',
+            );
+        }
+        
     }
 
     /**

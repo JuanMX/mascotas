@@ -186,11 +186,7 @@
                         processData: false,  // tell jQuery not to process the data
                         contentType: false,   // tell jQuery not to set contentType
                         beforeSend: function() {
-                            Swal.fire({
-                                title: '<span class="spinner-grow spinner-grow" role="status" aria-hidden="true"></span>&nbsp;Sending ...',
-                                showConfirmButton: false,
-                                allowOutsideClick: false,
-                            });
+                            myHelper_swalWorking();
                         }
                     })
                     .always(function() {
