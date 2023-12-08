@@ -16,6 +16,11 @@ class PetController extends Controller
         return view('pet.indexPet');
     }
 
+    public function indexPetReturnToTheShelter(): View
+    {
+        return view('pet.indexPetReturnToTheShelter');
+    }
+
     public function listPetsWithStatus(Request $request){
 
         $jsonReturn = array('success'=>false,'data'=>[]);
@@ -97,6 +102,23 @@ class PetController extends Controller
         
         $jsonReturn['success'] = true;
         
+        return response()->json($jsonReturn);
+    }
+
+    public function listPetAdopterAdoptionWithStatuses(Request $request){
+
+        $jsonReturn = array('success'=>false, 'pet_arrival'=>[], 'data'=>[]);
+
+        $jsonReturn['data'] = DB::table('pets')
+            ->join('adoptions', 'pets.id', '=', 'adoptions.pet_id')
+            ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'adopters.status', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'pets.status AS petstatus', 'adoptions.note AS note', 'adopters.id AS adopter_id', 'pets.id AS pet_id', 'adoptions.updated_at AS updated_at')
+            ->where('pets.status', $request->pet_status)
+            ->where('adoptions.status', $request->adoption_status)
+        ->get()->toArray();
+        
+        $jsonReturn['success'] = true;
+
         return response()->json($jsonReturn);
     }
 }
