@@ -116,7 +116,7 @@
                     "data": "pet_id",
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        return `<button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}} btn-action" value="${data}" data-toggle="tooltip" data-placement="bottom" title="Use this button only if the pet arrived at the shelter"><i class="{{Helper::getIconArrivalShelter()}}" aria-hidden="true"></i></button>`;
+                        return `<button type="button" class="btn btn-sm {{Helper::getColorArrivalShelter()}} btn-action" value="[${row['adopter_id']},${data}]" data-toggle="tooltip" data-placement="bottom" title="Use this button only if the pet arrived at the shelter"><i class="{{Helper::getIconArrivalShelter()}}" aria-hidden="true"></i></button>`;
                     }
                 },
                 {
@@ -143,16 +143,14 @@
             return true;
         });
 
-        $('#formCreate').on('submit', function(e){
+        $('#formReturn').on('submit', function(e){
 
             e.preventDefault();
 
-            postFormData = new FormData($('#formCreate')[0]);
-
-            var ajaxURL = $("[name='_method']").val() === "PATCH" ? 'edit' : 'create';
+            postFormData = new FormData($('#formReturn')[0]);
 
             $.ajax({
-                url: ajaxURL,
+                url: 'pet-returned-to-the-shelter',
                 type: 'POST',
                 dataType: 'json',
                 data: postFormData,
@@ -173,7 +171,7 @@
       
                 $('#table-pet').DataTable().ajax.reload(null, false);
                 $('#modalMin').modal('hide');
-                $('#formCreate')[0].reset();                                    
+                $('#formReturn')[0].reset();                                    
 
             })
             .fail(function(response) {
@@ -191,6 +189,7 @@
 
             $('#formReturn')[0].reset();
             $('#modalMin').modal('show');
+            $('#id').val(id);
         });
     });
 </script>

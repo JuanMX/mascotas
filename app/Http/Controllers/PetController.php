@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pet;
+use App\Models\Adoption;
 use Illuminate\View\View;
+
+use Illuminate\Support\Facades\Log;
 use Helper;
+Use Exception;
 
 class PetController extends Controller
 {
@@ -119,6 +123,40 @@ class PetController extends Controller
         
         $jsonReturn['success'] = true;
 
+        return response()->json($jsonReturn);
+    }
+
+    public function petReturnedToTheShelter(Request $request){
+
+        $request->arr_idAdopter_idPet = json_decode($request->arr_idAdopter_idPet);
+
+        $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        try{
+            DB::transaction(function() use ($request){
+                    
+                $adoption = Adoption::create([
+                    'adopter_id' => $request->arr_idAdopter_idPet[0],
+                    'pet_id'     => $request->arr_idAdopter_idPet[1],
+                    'status'     => 4, // see Helper getAdoptionStatus
+                    'note'       => $request->note,
+                ]);
+
+                $pet = Pet::findOrFail($request->arr_idAdopter_idPet[1]);
+                $pet->status = 0; // see Helper getPetStatus;
+                if($request->append) $pet->note = $pet->note . "\n" . $request->note;
+                $pet->save();
+            });
+
+            $jsonReturn['success'] = true;
+        }catch(Exception $e) {
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success']=false;
+            $jsonReturn['error']=array('Error while save the data');
+            $jsonReturn['data'] = $request;
+            return response()->json($jsonReturn, 500);
+        }
+        
         return response()->json($jsonReturn);
     }
 }

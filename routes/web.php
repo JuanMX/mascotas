@@ -37,6 +37,7 @@ Route::prefix('pet')->group(function () {
     Route::get('/return', [PetController::class, 'indexPetReturnToTheShelter']);
     Route::post('/list-pet-adopter-adoption-with-statuses', [PetController::class, 'listPetAdopterAdoptionWithStatuses']);
     Route::post('/list-pet-and-its-adopter', [AdoptionController::class, 'listPetAndItsAdopter']);
+    Route::post('/pet-returned-to-the-shelter', [PetController::class, 'petReturnedToTheShelter']);
 });
 
 Route::prefix('adoption')->group(function () {
