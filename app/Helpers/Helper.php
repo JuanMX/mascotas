@@ -57,6 +57,8 @@ class Helper
             4 => 'bg-orange',
             5 => 'bg-red',
             6 => 'bg-red',
+            7 => 'bg-orange',
+            8 => 'bg-orange',
         ];
 
         return $color;
@@ -71,6 +73,8 @@ class Helper
             4 => 'fas fa-arrow-alt-circle-down',
             5 => 'fas fa-ban',
             6 => 'fas fa-ban',
+            7 => 'fas fa-check-circle',
+            8 => 'fas fa-times-circle',
         ];
 
         return $icon;
@@ -92,7 +96,7 @@ class Helper
 
         return $adopter_status;
     }
-    public static function rootUrl(){
+    public static function project_root(){
         return Request::root();
     }
 }

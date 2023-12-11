@@ -171,8 +171,10 @@ class AdoptionController extends Controller
             $jsonReturn['data'] = $htmlTimeline;
         } catch(Exception $e) {
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
-            $jsonReturn['success']=false;
-            $jsonReturn['error'] = array("Something went wrong");
+            $jsonReturn['success'] = false;
+            $jsonReturn['error']   = array("Something went wrong");
+            $jsonReturn['data']    = $request;
+            return response()->json($jsonReturn, 404);
         }
 
         return response()->json($jsonReturn);
@@ -206,7 +208,7 @@ class AdoptionController extends Controller
                 
                 $htmlTimeline = $htmlTimeline.'<div><i class="'.Helper::getAdoptionIcon()[$historical['status']]." ".Helper::getAdoptionColor()[$historical['status']].'"></i><div class="timeline-item"><h3 class="timeline-header">';
                 
-                $htmlTimeline = $htmlTimeline.Helper::getAdoptionStatus()[$historical['status']].' (for): '.$historical['type']." ".$historical['name'].'</h3>';
+                $htmlTimeline = $htmlTimeline.Helper::getAdoptionStatus()[$historical['status']].' (for): '.Helper::getPetType()[$historical['type']]." ".$historical['name'].'</h3>';
 
                 $htmlTimeline = $htmlTimeline.'<div class="timeline-body">'.$historical['note'];
 
@@ -217,8 +219,10 @@ class AdoptionController extends Controller
             $jsonReturn['data'] = $htmlTimeline;
         } catch(Exception $e) {
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
-            $jsonReturn['success']=false;
-            $jsonReturn['error'] = array("Something went wrong");
+            $jsonReturn['success'] = false;
+            $jsonReturn['error']   = array("Something went wrong");
+            $jsonReturn['data']    = $request;
+            return response()->json($jsonReturn, 404);
         }
 
         return response()->json($jsonReturn);

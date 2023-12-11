@@ -9,7 +9,7 @@
 @section('content')
 @section('plugins.Datatables', true)
     
-    <h2>Pets Table</h2>
+    <h2> <i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp; Pets Table</h2>
     <div>
         <table id="table-all-pets" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
@@ -26,8 +26,8 @@
         </table>
     </div>
 
-    <h2 class="pt-5">Adopters Table</h2>
-    <div>
+    <h2 class="pt-5"> <i class="fas fa-user-alt"></i> &nbsp; Adopters Table</h2>
+    <div class="pb-3">
         <table id="table-all-adopters" class="table table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
@@ -51,10 +51,10 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
+<script src="{{ secure_asset('js/helper_swal.js') }}?v={{ env('VERSION_CSS_JS') }}"></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
@@ -84,6 +84,11 @@
                 },
                 {
                     "data": "type",
+                    render: function ( data, type, row ) {
+                        
+                        var arr_type = @json(Helper::getPetType());
+                        return arr_type[data];
+                    }
                 },
                 {
                     "data": "age",
@@ -104,7 +109,7 @@
             if (typeof techNote === 'undefined') {
 
             } else {
-                // Se imprime este error en consola, para no mostrar al usuario
+                // Show error in console
                 console.error(message);
             }
             return true;
@@ -143,11 +148,11 @@
                     $('#modalCustom').modal('show');
                     
                 } else {
-                    //muestraErrores(response, '');
+                    myHelper_swalGenericError();
                 }
             })
             .fail(function() {
-                //mensajeOcurrioIncidente();
+                myHelper_swalGenericError();
             });
 
         });
@@ -227,7 +232,7 @@
             if (typeof techNote === 'undefined') {
 
             } else {
-                // Se imprime este error en consola, para no mostrar al usuario
+                // Show error in console
                 console.error(message);
             }
             return true;
@@ -266,11 +271,11 @@
                     $('#modalCustom').modal('show');
                     
                 } else {
-                    //muestraErrores(response, '');
+                    myHelper_swalGenericError();
                 }
             })
             .fail(function() {
-                //mensajeOcurrioIncidente();
+                myHelper_swalGenericError();
             });
 
         });

@@ -341,6 +341,11 @@ return [
             'icon' => 'fas fa-fw fa-paw',
         ],
         [
+            'text' => 'Mark pikced up pets',
+            'url'  => 'pet/picked',
+            'icon' => 'fas fa-arrow-alt-circle-up',
+        ],
+        [
             'text' => 'Mark pets returning to the shelter',
             'url'  => 'pet/return',
             'icon' => 'fas fa-arrow-alt-circle-down',
