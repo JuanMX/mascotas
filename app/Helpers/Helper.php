@@ -25,6 +25,7 @@ class Helper
             3 => 'REQUESTED RETURN',
             4 => 'REMOVED',
             5 => 'ACCEPTED RETURN AND PENDING TO ARRIVE AT THE SHELTER',
+            6 => 'ACCEPTED ADOPTION AND PENDING TO BE PICKED UP AT THE SHELTER',
         ];
 
         return $pet_status;
@@ -41,7 +42,8 @@ class Helper
             5 => 'REJECTED REGISTER ADOPTER',
             6 => 'REJECTED REGISTER PET',
             7 => 'ACCEPTED RETURN',
-            8 => 'REJECTED RETURN'
+            8 => 'REJECTED RETURN',
+            9 => 'PICKED UP PET',
         ];
 
         return $adoption_status;
@@ -59,6 +61,7 @@ class Helper
             6 => 'bg-red',
             7 => 'bg-orange',
             8 => 'bg-orange',
+            9 => 'bg-blue',
         ];
 
         return $color;
@@ -75,6 +78,7 @@ class Helper
             6 => 'fas fa-ban',
             7 => 'fas fa-check-circle',
             8 => 'fas fa-times-circle',
+            9 => 'fas fa-arrow-alt-circle-up',
         ];
 
         return $icon;

@@ -342,7 +342,7 @@ return [
         ],
         [
             'text' => 'Mark pikced up pets',
-            'url'  => 'pet/picked',
+            'url'  => 'pet/pickedup',
             'icon' => 'fas fa-arrow-alt-circle-up',
         ],
         [

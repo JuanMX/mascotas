@@ -51,7 +51,7 @@
         {{-- Minimal with placeholder --}}
         <x-adminlte-textarea label="Address" rows=1  name="address" id="address" placeholder="" required=""/>
 
-        <x-adminlte-textarea label="Optional adoption note" name="note" id="note" placeholder="" required=""/>
+        <x-adminlte-textarea label="Optional adoption note" name="note" id="note" placeholder="Adopter. Why do you want to adopt the pet?" required=""/>
 
     </form>
 

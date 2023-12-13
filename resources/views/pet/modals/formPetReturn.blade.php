@@ -16,8 +16,8 @@
     </form>
 
     <x-slot name="footerSlot">
-        <x-adminlte-button label="Save" type="submit" class="{{Helper::getColorArrivalShelter()}}" icon="fas fa-lg fa-save" form="formReturn" id="btn-save"/>
-        <x-adminlte-button label="Close" theme="secondary" icon="far fa-times-circle" data-dismiss="modal"/>
+        <x-adminlte-button label="Save" type="submit" class="btn" theme="dark" icon="fas fa-lg fa-save" form="formReturn" id="btn-save"/>
+        <x-adminlte-button label="Close" theme="default" icon="far fa-times-circle" data-dismiss="modal"/>
     </x-slot>
 
 </x-adminlte-modal>

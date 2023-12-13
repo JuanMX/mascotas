@@ -200,7 +200,11 @@
                     })
                     .done(function(response) {
                         Swal.close();
-                        Swal.fire("Done");
+                        Swal.fire({
+                            title: "An email was sent to:",
+                            text: data['email'],
+                            type: "success"
+                        });
                         $('#table-deliberate-adopt').DataTable().ajax.reload(null, false);
                     })
                     .fail(function(response) {

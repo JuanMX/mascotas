@@ -326,7 +326,7 @@ class AdoptionController extends Controller
                 ]);
 
                 $pet = Pet::findOrFail($request->arr_idAdopter_idPet_accepted[1]);
-                $pet->status = $request->arr_idAdopter_idPet_accepted[2] ? 2 : 0; // see Helper getPetStatus;
+                $pet->status = $request->arr_idAdopter_idPet_accepted[2] ? 6 : 0; // see Helper getPetStatus;
                 $pet->save();
                 
                 $adopter = Adopter::findOrFail($request->arr_idAdopter_idPet_accepted[0]);

@@ -25,6 +25,11 @@ class PetController extends Controller
         return view('pet.indexPetReturnToTheShelter');
     }
 
+    public function indexPetPickedUp(): View
+    {
+        return view('pet.indexPetPickedUp');
+    }
+
     public function listPetsWithStatus(Request $request){
 
         $jsonReturn = array('success'=>false,'data'=>[]);
