@@ -9,7 +9,7 @@
 @section('content')
     <x-adminlte-alert theme="info" title="Any action will send an email" dismissable></x-adminlte-alert>
     <h2 class="pt-2"><i class="{{Helper::getAdoptionIcon()[0]}}" aria-hidden="true"></i> &nbsp; Adoption</h2>
-    <div>
+    <div class="pb-3">
         <table id="table-deliberate-adopt" class="table table-bordered table-hover">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>

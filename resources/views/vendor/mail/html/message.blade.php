@@ -21,7 +21,8 @@
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')<br>
+[The project](https://github.com/JuanMX/mascotas) and [The blog](https://juanmx.github.io/2022/05/21/apuntes-laravel-fullstack.html)
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>

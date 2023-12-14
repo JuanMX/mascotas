@@ -77,6 +77,7 @@ class AdoptionController extends Controller
             ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'adoptions.note AS note', 'adopters.id AS adopter_id', 'pets.id AS pet_id')
             ->where('pets.status', 1)
             ->where('adopters.status', 0)
+            ->where('adoptions.status', 0)
             ->whereNull('adopters.deleted_at')
             ->whereNull('pets.deleted_at')
         ->get()->toArray();
