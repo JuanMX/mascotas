@@ -150,7 +150,7 @@
             postFormData = new FormData($('#formReturn')[0]);
 
             $.ajax({
-                url: 'pending-route',
+                url: 'pet-picked-up',
                 type: 'POST',
                 dataType: 'json',
                 data: postFormData,

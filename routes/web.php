@@ -40,6 +40,7 @@ Route::prefix('pet')->group(function () {
     Route::post('/pet-returned-to-the-shelter', [PetController::class, 'petReturnedToTheShelter']);
 
     Route::get('/pickedup', [PetController::class, 'indexPetPickedUp']);
+    Route::post('/pet-picked-up', [PetController::class, 'petPickedUp']);
 });
 
 Route::prefix('adoption')->group(function () {
