@@ -41,29 +41,6 @@ class AdoptionController extends Controller
         return view('adoption.indexReturn');
     }
 
-    /*
-    public function adopterInfoForPet(Request $request){
-
-        $adopter_id = DB::table('adoptions')
-            ->select('adopter_id')
-            ->where('pet_id', $request->id)
-            ->where('status', 1)
-            ->latest()
-            ->first();
-
-        $adopter_data = Adopter::findOrFail($adopter_id->adopter_id);
-
-        $controller_html = $adopter_data['forename']." ".$adopter_data['surname'].'<br>';
-        $controller_html = $controller_html.$adopter_data['address'].'<br>';
-        $controller_html = $controller_html.$adopter_data['phone'].'<br>';
-        $controller_html = $controller_html.$adopter_data['email'].'<br>';
-        $controller_html = $controller_html.'Adopter type: '.Helper::getAdopterType()[$adopter_data['type']].'<br><br>';
-        
-        $controller_html = $controller_html.'<textarea class="form-control" id="returNote" rows="3" placeholder="Optional note for the requested return"></textarea>';
-
-        return response()->json($controller_html);
-    }
-    */
     public function indexDeliberate(): View
     {
         return view('adoption.indexDeliberate');
@@ -80,6 +57,7 @@ class AdoptionController extends Controller
             ->where('adoptions.status', 0)
             ->whereNull('adopters.deleted_at')
             ->whereNull('pets.deleted_at')
+            ->whereNull('adoptions.deleted_at')
         ->get()->toArray();
         
         return response()->json($jsonReturn);
@@ -98,6 +76,7 @@ class AdoptionController extends Controller
             ->where('adoptions.status', 0)
             ->whereNull('adopters.deleted_at')
             ->whereNull('pets.deleted_at')
+            ->whereNull('adoptions.deleted_at')
         ->get()->toArray();
         
         $jsonReturn['success'] = true;
@@ -114,6 +93,9 @@ class AdoptionController extends Controller
             ->where('adopters.status', 0)
             ->where('pets.status', 3)
             ->where('adoptions.status', 3)
+            ->whereNull('adopters.deleted_at')
+            ->whereNull('pets.deleted_at')
+            ->whereNull('adoptions.deleted_at')
         ->get()->toArray();
         return response()->json($jsonReturn);
     }

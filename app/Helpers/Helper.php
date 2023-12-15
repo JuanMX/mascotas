@@ -56,7 +56,7 @@ class Helper
             1 => 'bg-green',
             2 => 'bg-red',
             3 => 'bg-yellow',
-            4 => 'bg-orange',
+            4 => 'bg-purple',
             5 => 'bg-red',
             6 => 'bg-red',
             7 => 'bg-orange',

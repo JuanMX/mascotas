@@ -124,6 +124,7 @@ class PetController extends Controller
             ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'adopters.address', 'adopters.email', 'adopters.phone', 'adopters.type', 'adopters.age', 'adopters.status', 'pets.name AS petname', 'pets.type AS pettype', 'pets.note AS petnote', 'pets.status AS petstatus', 'adoptions.note AS note', 'adopters.id AS adopter_id', 'pets.id AS pet_id', 'adoptions.updated_at AS updated_at')
             ->where('pets.status', $request->pet_status)
             ->where('adoptions.status', $request->adoption_status)
+            ->whereNull('adoptions.deleted_at')
         ->get()->toArray();
         
         $jsonReturn['success'] = true;
@@ -139,7 +140,9 @@ class PetController extends Controller
 
         try{
             DB::transaction(function() use ($request){
-                    
+
+                $deleted = Adoption::where('pet_id', $request->arr_idAdopter_idPet[1])->delete();//'reset' the pet in adoptions table
+
                 $adoption = Adoption::create([
                     'adopter_id' => $request->arr_idAdopter_idPet[0],
                     'pet_id'     => $request->arr_idAdopter_idPet[1],
