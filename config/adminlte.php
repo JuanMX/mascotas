@@ -341,7 +341,7 @@ return [
             'icon' => 'fas fa-fw fa-paw',
         ],
         [
-            'text' => 'Mark pikced up pets',
+            'text' => 'Mark picked up pets',
             'url'  => 'pet/pickedup',
             'icon' => 'fas fa-arrow-alt-circle-up',
         ],
@@ -532,7 +532,7 @@ return [
             ],
         ],
         'Chartjs' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

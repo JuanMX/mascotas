@@ -3,213 +3,280 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Dashboard '{{ config('app.name') }}'</h1>
 @stop
 
 @section('content')
-@section('plugins.Datatables', true)
-    <p>Welcome to this beautiful admin panel.</p>
 
-    {{-- Setup data for datatables --}}
-@php
-$heads = [
-    'ID',
-    'Name',
-    ['label' => 'Phone', 'width' => 40],
-    ['label' => 'Actions', 'no-export' => true, 'width' => 5],
-];
+<div class="container-fluid">
 
-$btnEdit = '<button class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
-                <i class="fa fa-lg fa-fw fa-pen"></i>
-            </button>';
-$btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" title="Delete">
-                  <i class="fa fa-lg fa-fw fa-trash"></i>
-              </button>';
-$btnDetails = '<button class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
-                   <i class="fa fa-lg fa-fw fa-eye"></i>
-               </button>';
+    {{-- Pets Summary  --}}
+    <div class="row">
+        <div class="col-sm">
+            <x-adminlte-small-box title="420" text="Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-purple" url="pet/pet" url-text="Go to Manage Pets"/>
+        </div>
 
-$config = [
-    'data' => [
-        [22, 'John Bender', '+02 (123) 123456789', '<nobr>'.$btnEdit.$btnDelete.$btnDetails.'</nobr>'],
-        [19, 'Sophia Clemens', '+99 (987) 987654321', '<nobr>'.$btnEdit.$btnDelete.$btnDetails.'</nobr>'],
-        [3, 'Peter Sousa', '+69 (555) 12367345243', '<nobr>'.$btnEdit.$btnDelete.$btnDetails.'</nobr>'],
-    ],
-    'order' => [[1, 'asc']],
-    'columns' => [null, null, null, ['orderable' => false]],
-];
-@endphp
+        <div class="col-sm">
+            <x-adminlte-small-box title="69" text="Pets pending to be picked up" icon="{{Helper::getAdoptionIcon()[9]}}" class="{{Helper::getAdoptionColor()[9]}}" url="pet/pickedup" url-text="Go to Mark Picked Up Pets"/>
+        </div>
 
-{{-- Minimal example / fill data using the component slot --}}
-<x-adminlte-datatable id="table1" :heads="$heads">
-    @foreach($config['data'] as $row)
-        <tr>
-            @foreach($row as $cell)
-                <td>{!! $cell !!}</td>
-            @endforeach
-        </tr>
-    @endforeach
-</x-adminlte-datatable>
-
-<h2>Adopter</h2>
-<!-- Main node for this component -->
-<div class="timeline">
-  
-
-  <!-- Timeline time label -->
-  <div class="time-label">
-    <span class="bg-info">23 Aug. 2019</span>
-  </div>
-  <div>
-  <!-- Before each timeline item corresponds to one icon on the left scale -->
-    <i class="fas fa-hand-holding-heart bg-blue"></i>
-    <!-- Timeline item -->
-    <div class="timeline-item">
-    <!-- Time -->
-      <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-      <!-- Header. Optional -->
-      <h3 class="timeline-header">Solicitada la adopción de {Nombre Mascota} por {Nombre Adoptante}</h3>
-      <!-- Body -->
-      <div class="timeline-body">
-        {adoption->note}
-      </div>
-      <!-- Placement of additional controls. Optional -->
-      <div class="timeline-footer">
-        <!-- <a class="btn btn-primary btn-sm">Read more</a> -->
-        <!-- <a class="btn btn-danger btn-sm">Delete</a> -->
-      </div>
+        <div class="col-sm">
+            <x-adminlte-small-box title="247" text="Pets pending to return at the shelter" icon="{{Helper::getIconArrivalShelter()}}" class="{{Helper::getColorArrivalShelter()}}" url="pet/return" url-text="Go to Mark Pets Returning to the shelter"/>
+        </div>
     </div>
-  </div>
 
-  <!-- Timeline time label -->
-  <div class="time-label">
-    <span class="bg-info">23 Aug. 2019</span>
-  </div>
-  <div>
-  <!-- Before each timeline item corresponds to one icon on the left scale -->
-    <i class="fas fa-check-circle bg-green"></i>
-    <!-- Timeline item -->
-    <div class="timeline-item">
-    <!-- Time -->
-      <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-      <!-- Header. Optional -->
-      <h3 class="timeline-header">Aceptada la adopción de {Nombre Mascota} por {Nombre Adoptante}</h3>
-      <!-- Body -->
-      <div class="timeline-body">
-        {adoption->note}
-      </div>
-      <!-- Placement of additional controls. Optional -->
-      <div class="timeline-footer">
-        <!-- <a class="btn btn-primary btn-sm">Read more</a> -->
-        <!-- <a class="btn btn-danger btn-sm">Delete</a> -->
-      </div>
+    {{-- Deliberation Summary  --}}
+
+    <div class="row">
+        <div class="col-sm">
+            <x-adminlte-small-box title="420" text="Adoption Requests" icon="{{Helper::getAdoptionIcon()[0]}}" class="{{Helper::getAdoptionColor()[0]}}" url="adoption/deliberate-adoption" url-text="Go to Deliberate Adoption Requests"/>
+        </div>
+
+        <div class="col-sm">
+            <x-adminlte-small-box title="69" text="Return Requests" icon="{{Helper::getAdoptionIcon()[3]}} " class="{{Helper::getAdoptionColor()[3]}}" url="adoption/deliberate-return" url-text="Go to Deliberate Requests Requests"/>
+        </div>
     </div>
-  </div>
 
-  <!-- Timeline time label -->
-  <div class="time-label">
-    <span class="bg-info">23 Aug. 2019</span>
-  </div>
-  <div>
-  <!-- Before each timeline item corresponds to one icon on the left scale -->
-    <i class="fas fa-times-circle bg-red"></i>
-    <!-- Timeline item -->
-    <div class="timeline-item">
-    <!-- Time -->
-      <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-      <!-- Header. Optional -->
-      <h3 class="timeline-header">Rechazada la adopción de {Nombre Mascota} por {Nombre Adoptante}</h3>
-      <!-- Body -->
-      <div class="timeline-body">
-        {adoption->note}
-      </div>
-      <!-- Placement of additional controls. Optional -->
-      <div class="timeline-footer">
-        <!-- <a class="btn btn-primary btn-sm">Read more</a> -->
-        <!-- <a class="btn btn-danger btn-sm">Delete</a> -->
-      </div>
+    {{-- Chart Current Year Arrivals and Adoptions  --}}
+
+    <div class="row">
+        <div class="col-sm">
+
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Bar Chart</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chartArrivalsAdoptions" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%; display: block; width: 572px;" width="715" height="312" class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            
+        </div>
     </div>
-  </div>
+    <div class="row pb-5">
+        <div class="col-sm">
+            <div class="card card-secondary">
+                <div class="card-header border-transparent">
+                    <h3 class="card-title">Latest Orders</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
 
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Item</th>
+                                    <th>Status</th>
+                                    <th>Popularity</th>
+                                </tr>
+                            </thead>
 
-  <!-- Timeline time label -->
-  <div class="time-label">
-    <span class="bg-info">23 Aug. 2019</span>
-  </div>
-  <div>
-  <!-- Before each timeline item corresponds to one icon on the left scale -->
-    <i class="fas fa-heart-broken bg-yellow"></i>
-    <!-- Timeline item -->
-    <div class="timeline-item">
-    <!-- Time -->
-      <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-      <!-- Header. Optional -->
-      <h3 class="timeline-header">Devolución de {Nombre Mascota} por {Nombre Adoptante}</h3>
-      <!-- Body -->
-      <div class="timeline-body">
-        {adoption->note}
-      </div>
-      <!-- Placement of additional controls. Optional -->
-      <div class="timeline-footer">
-        <!-- <a class="btn btn-primary btn-sm">Read more</a> -->
-        <!-- <a class="btn btn-danger btn-sm">Delete</a> -->
-      </div>
+                            <tbody>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                                    <td>Call of Duty IV</td>
+                                    <td><span class="badge badge-success">Shipped</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td><a href="pages/examples/invoice.html">OR1848</a></td>
+                                    <td>Samsung Smart TV</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
+                                    <td>iPhone 6 Plus</td>
+                                    <td><span class="badge badge-danger">Delivered</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
+                                    <td>Samsung Smart TV</td>
+                                    <td><span class="badge badge-info">Processing</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR1848</a></td>
+                                    <td>Samsung Smart TV</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
+                                    <td>iPhone 6 Plus</td>
+                                    <td><span class="badge badge-danger">Delivered</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                                    <td>Call of Duty IV</td>
+                                    <td><span class="badge badge-success">Shipped</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                                    <td>Call of Duty IV</td>
+                                    <td><span class="badge badge-success">Shipped</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                                    <td>Call of Duty IV</td>
+                                    <td><span class="badge badge-success">Shipped</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                                    <td>Call of Duty IV</td>
+                                    <td><span class="badge badge-success">Shipped</span></td>
+                                    <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="card-footer clearfix">
+                    <a href="javascript:void(0)" class="btn btn-lg btn-block btn-info"><i class="fas fa-sync-alt"></i> Refresh this table</a>
+                    
+                </div>
+
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Timeline time label -->
-  <div class="time-label">
-    <span class="bg-info">23 Aug. 2019</span>
-  </div>
-  <div>
-  <!-- Before each timeline item corresponds to one icon on the left scale -->
-      <i class="fas fa-ban bg-red"></i>
-    <!-- Timeline item -->
-    <div class="timeline-item">
-    <!-- Time -->
-      <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-      <!-- Header. Optional -->
-      <h3 class="timeline-header">Baneo de {Nombre Adoptante}</h3>
-      <!-- Body -->
-      <div class="timeline-body">
-        {adoption->note}
-      </div>
-      <!-- Placement of additional controls. Optional -->
-      <div class="timeline-footer">
-        <!-- <a class="btn btn-primary btn-sm">Read more</a> -->
-        <!-- <a class="btn btn-danger btn-sm">Delete</a> -->
-      </div>
-    </div>
-  </div>
     
-  <!-- The last icon means the story is complete -->
-  <div>
-    <i class="fas fa-flag-checkered"></i>
-  </div>
+    
+        
+    
 </div>
-
-
-
-<div class="pt-1">
-</div>
-
-
-{{-- Example button to open modal --}}
-<x-adminlte-button label="Open Modal" data-toggle="modal" data-target="#modalCustom" class="bg-teal"/>
-
-@stop
-
-@section('footer')
-<div class="pt-5">
-A
-</div>
-
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
 @stop
+
+@push('js')
+<script>
+
+    $(document).ready(function() {
+        var areaChartData = {
+            labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                label               : 'Digital Goods',
+                backgroundColor     : 'rgba(60,141,188,0.9)',
+                borderColor         : 'rgba(60,141,188,0.8)',
+                pointRadius          : false,
+                pointColor          : '#3b8bba',
+                pointStrokeColor    : 'rgba(60,141,188,1)',
+                pointHighlightFill  : '#fff',
+                pointHighlightStroke: 'rgba(60,141,188,1)',
+                data                : [28, 48, 40, 19, 86, 27, 90, 80, 17, 1, 22, 11]
+                },
+                {
+                label               : 'Electronics',
+                backgroundColor     : 'rgba(210, 214, 222, 1)',
+                borderColor         : 'rgba(210, 214, 222, 1)',
+                pointRadius         : false,
+                pointColor          : 'rgba(210, 214, 222, 1)',
+                pointStrokeColor    : '#c1c7d1',
+                pointHighlightFill  : '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data                : [65, 59, 80, 81, 56, 55, 40, 48, 65, 42, 31, 1]
+                },
+            ]
+        }
+
+        var areaChartOptions = {
+            maintainAspectRatio : false,
+            responsive : true,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                gridLines : {
+                    display : false,
+                }
+                }],
+                yAxes: [{
+                gridLines : {
+                    display : false,
+                }
+                }]
+            }
+        }
+
+        //-------------
+        //- BAR CHART -
+        //-------------
+        var barChartCanvas = $('#chartArrivalsAdoptions').get(0).getContext('2d')
+        var barChartData = $.extend(true, {}, areaChartData)
+        var temp0 = areaChartData.datasets[0]
+        var temp1 = areaChartData.datasets[1]
+        barChartData.datasets[0] = temp1
+        barChartData.datasets[1] = temp0
+
+        var barChartOptions = {
+            responsive              : true,
+            maintainAspectRatio     : false,
+            datasetFill             : false
+        }
+
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+        })
+    });
+
+</script>
+@endpush
