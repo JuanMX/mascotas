@@ -3,17 +3,38 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard '{{ config('app.name') }}'</h1>
+    <h1> '{{ config('app.name') }}' Dashboard </h1>
 @stop
 
 @section('content')
 
 <div class="container-fluid">
 
+    {{-- TOTAL Pets Summary  --}}
+    <div class="row">
+        <div class="col-sm">
+            <x-adminlte-info-box title="TOTAL All Pets" text="100" icon="fas fa-fw fa-paw text-light"
+            theme="success" description="All Total Pets" progress=0 progress-theme="teal"/>
+        </div>
+
+        <div class="col-sm">
+            
+            <x-adminlte-info-box title="TOTAL Adopted Pets" text="75/100" icon="{{Helper::getAdoptionIcon()[0]}} text-light" class="{{Helper::getAdoptionColor()[0]}}"
+            progress=75 progress-theme="teal"
+            description="75% of total adopted pets"/>
+        </div>
+
+        <div class="col-sm">
+            <x-adminlte-info-box title="TOTAL Not Adopted Pets" text="25/100" icon="{{Helper::getAdoptionIcon()[3]}} text-light"
+            class="bg-red" progress=25 progress-theme="teal"
+            description="25% of total not adopted pets"/>
+        </div>
+    </div>
+
     {{-- Pets Summary  --}}
     <div class="row">
         <div class="col-sm">
-            <x-adminlte-small-box title="420" text="Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-purple" url="pet/pet" url-text="Go to Manage Pets"/>
+            <x-adminlte-small-box title="420" text="Current Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-purple" url="pet/pet" url-text="Go to Manage Pets"/>
         </div>
 
         <div class="col-sm">
@@ -33,7 +54,7 @@
         </div>
 
         <div class="col-sm">
-            <x-adminlte-small-box title="69" text="Return Requests" icon="{{Helper::getAdoptionIcon()[3]}} " class="{{Helper::getAdoptionColor()[3]}}" url="adoption/deliberate-return" url-text="Go to Deliberate Requests Requests"/>
+            <x-adminlte-small-box title="69" text="Return Requests" icon="{{Helper::getAdoptionIcon()[3]}}" class="{{Helper::getAdoptionColor()[3]}}" url="adoption/deliberate-return" url-text="Go to Deliberate Requests Requests"/>
         </div>
     </div>
 
@@ -42,7 +63,7 @@
     <div class="row">
         <div class="col-sm">
 
-            <div class="card card-success">
+            <div class="card card-secondary">
                 <div class="card-header">
                     <h3 class="card-title">Bar Chart</h3>
                         <div class="card-tools">
@@ -71,7 +92,7 @@
         <div class="col-sm">
             <div class="card card-secondary">
                 <div class="card-header border-transparent">
-                    <h3 class="card-title">Latest Orders</h3>
+                    <h3 class="card-title">Latest adoptions actions</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -84,13 +105,13 @@
 
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table m-0">
+                        <table class="table table-sm m-0">
                             <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Item</th>
-                                    <th>Status</th>
-                                    <th>Popularity</th>
+                                    <th>Adopter</th>
+                                    <th>Pet</th>
+                                    <th>Adoption type</th>
+                                    <th>Note</th>
                                 </tr>
                             </thead>
 
@@ -182,7 +203,7 @@
                 </div>
 
                 <div class="card-footer clearfix">
-                    <a href="javascript:void(0)" class="btn btn-lg btn-block btn-info"><i class="fas fa-sync-alt"></i> Refresh this table</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-block btn-info"><i class="fas fa-sync-alt"></i> Refresh this table</a>
                     
                 </div>
 
