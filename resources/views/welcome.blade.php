@@ -13,28 +13,34 @@
     {{-- TOTAL Pets Summary  --}}
     <div class="row">
         <div class="col-sm">
-            <x-adminlte-info-box title="TOTAL All Pets" text="100" icon="fas fa-fw fa-paw text-light"
-            theme="success" description="All Total Pets" progress=0 progress-theme="teal"/>
+            <x-adminlte-info-box title="Pets" text="" icon="fas fa-fw fa-paw text-light" id="widgetTotalPets"
+            theme="success" description="TOTAL All Pets" progress=0 progress-theme="teal"/>
         </div>
 
         <div class="col-sm">
             
-            <x-adminlte-info-box title="TOTAL Adopted Pets" text="75/100" icon="{{Helper::getAdoptionIcon()[0]}} text-light" class="{{Helper::getAdoptionColor()[0]}}"
-            progress=75 progress-theme="teal"
-            description="75% of total adopted pets"/>
+            <x-adminlte-info-box title="Adopted Pets" text="" icon="{{Helper::getAdoptionIcon()[0]}} text-light" class="{{Helper::getAdoptionColor()[0]}}"
+            id="widgetAdoptedPets" progress=0 progress-theme="teal"
+            description=""/>
         </div>
 
         <div class="col-sm">
-            <x-adminlte-info-box title="TOTAL Not Adopted Pets" text="25/100" icon="{{Helper::getAdoptionIcon()[3]}} text-light"
-            class="bg-red" progress=25 progress-theme="teal"
-            description="25% of total not adopted pets"/>
+            <x-adminlte-info-box title="Not Adopted Pets" text="" icon="{{Helper::getAdoptionIcon()[3]}} text-light"
+            id="widgetNotAdoptedPets" class="bg-yellow" progress=0 progress-theme="teal"
+            description=""/>
+        </div>
+
+        <div class="col-sm">
+            <x-adminlte-info-box title="Removed Pets" text="" icon="{{Helper::getAdoptionIcon()[6]}} text-light"
+            id="widgetDeletedPets" class="bg-red" progress=0 progress-theme="teal"
+            description=""/>
         </div>
     </div>
 
     {{-- Pets Summary  --}}
     <div class="row">
         <div class="col-sm">
-            <x-adminlte-small-box title="420" text="Current Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-purple" url="pet/pet" url-text="Go to Manage Pets"/>
+            <x-adminlte-small-box title="420" text="Current Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-yellow" url="pet/pet" url-text="Go to Manage Pets"/>
         </div>
 
         <div class="col-sm">
@@ -92,7 +98,7 @@
         <div class="col-sm">
             <div class="card card-secondary">
                 <div class="card-header border-transparent">
-                    <h3 class="card-title">Latest adoptions actions</h3>
+                    <h3 class="card-title">10 Latest adoptions actions</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -225,9 +231,70 @@
 @stop
 
 @push('js')
+<script src="{{ secure_asset('js/helper_swal.js') }}?v={{ env('VERSION_CSS_JS') }}"></script>
 <script>
-
     $(document).ready(function() {
+
+        let widgetTotalPetsJs = new _AdminLTE_InfoBox('widgetTotalPets');
+        let widgetAdoptedPetsJs = new _AdminLTE_InfoBox('widgetAdoptedPets');
+        let widgetNotAdoptedPetsJs = new _AdminLTE_InfoBox('widgetNotAdoptedPets');
+        let widgetDeletedPetsJs = new _AdminLTE_InfoBox('widgetDeletedPets');
+
+        postFormData = new FormData();
+        postFormData.append('_token', "{{csrf_token()}}");
+        $.ajax({
+            url: 'dashboard-total',
+            type: 'POST',
+            data: postFormData,
+            dataType: 'json',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
+            
+        })
+        .done(function(response) {
+            if(response.success){
+
+                // Update data.
+                let text;
+                let progress
+                let description;
+                let data;
+
+                text = response.data.total;
+                data = {text};
+                widgetTotalPetsJs.update(data);
+
+                text = response.data.adopted + ' / ' + response.data.total;
+                progress = Math.round(response.data.adopted  * 100 / response.data.total);
+                description = progress + '% of total adopted pets';
+                data = {text, description, progress};
+                widgetAdoptedPetsJs.update(data);
+
+                text = response.data.not_adopted + ' / ' + response.data.total;
+                progress = Math.round(response.data.not_adopted  * 100 / response.data.total);
+                description = progress + '% of total not adopted pets';
+                data = {text, description, progress};
+                widgetNotAdoptedPetsJs.update(data);
+
+                text = response.data.deleted + ' / ' + response.data.total;
+                progress = Math.round(response.data.deleted  * 100 / response.data.total);
+                description = progress + '% of total removed pets';
+                data = {text, description, progress};
+                widgetDeletedPetsJs.update(data);
+                
+            }
+            else{
+                myHelper_toastErrorWithMessage(response.error);
+            }
+            $(document).Toasts('create', {
+                title: 'Done',
+                autohide: true,
+                delay: 5000,
+                class: 'bg-green',
+                icon: 'far fa-check-circle',
+            })
+        });
+
         var areaChartData = {
             labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [

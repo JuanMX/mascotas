@@ -5,6 +5,9 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\SimpleCatalogueController;
+use App\Http\Controllers\DashboardController;
+
+use App\Mail\AdoptionDeliberation;
 
 use App\Http\Controllers\TestController;
 /*
@@ -18,14 +21,12 @@ use App\Http\Controllers\TestController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/home', function () {
-    return view('welcome');
-});
-
-
+Route::get('/', [DashboardController::class, 'index']);
+Route::get('/home', [DashboardController::class, 'index']);
+Route::post('/dashboard-total', [DashboardController::class, 'dashboardTotal']);
+Route::post('/dashboard-pendings-and-requests', [DashboardController::class, 'dashboardPendingsAndRequests']);
+Route::post('/dashboard-bar-chart', [DashboardController::class, 'dashboardBarChart']);
+Route::post('/latest-adoptions-actions', [DashboardController::class, 'dashboardLatestAdoptionsActions']);
 
 Route::prefix('pet')->group(function () {
     Route::get('/pet', [PetController::class, 'index']);

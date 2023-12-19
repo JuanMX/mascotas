@@ -14,3 +14,13 @@ function myHelper_swalWorking(){
         allowOutsideClick: false,
     });
 }
+
+function myHelper_toastErrorWithMessage(message){
+    $(document).Toasts('create', {
+        title: message,
+        autohide: true,
+        delay: 6000,
+        class: 'bg-red',
+        icon: 'far fa-times-circle',
+    })
+}
