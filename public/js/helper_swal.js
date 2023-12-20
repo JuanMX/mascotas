@@ -15,11 +15,11 @@ function myHelper_swalWorking(){
     });
 }
 
-function myHelper_toastErrorWithMessage(message){
+function myHelper_toastErrorWithMessage(message="ERROR"){
     $(document).Toasts('create', {
         title: message,
         autohide: true,
-        delay: 6000,
+        delay: 9999,
         class: 'bg-red',
         icon: 'far fa-times-circle',
     })

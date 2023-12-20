@@ -24,7 +24,8 @@ use App\Http\Controllers\TestController;
 Route::get('/', [DashboardController::class, 'index']);
 Route::get('/home', [DashboardController::class, 'index']);
 Route::post('/dashboard-total', [DashboardController::class, 'dashboardTotal']);
-Route::post('/dashboard-pendings-and-requests', [DashboardController::class, 'dashboardPendingsAndRequests']);
+Route::post('/dashboard-pets-pending', [DashboardController::class, 'dashboardPetsPending']);
+Route::post('/dashboard-pets-requests', [DashboardController::class, 'dashboardPetsRequests']);
 Route::post('/dashboard-bar-chart', [DashboardController::class, 'dashboardBarChart']);
 Route::post('/latest-adoptions-actions', [DashboardController::class, 'dashboardLatestAdoptionsActions']);
 

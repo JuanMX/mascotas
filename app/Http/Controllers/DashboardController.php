@@ -24,10 +24,10 @@ class DashboardController extends Controller
         return view('welcome');
     }
 
-    public function dashboardTotal() 
+    public function dashboardTotal(Request $request) 
     {
-        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>[]);
-
+        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>'');
+        
         try{
 
             $jsonReturn['data']['total']       = DB::table('pets')->count();
@@ -35,11 +35,12 @@ class DashboardController extends Controller
             $jsonReturn['data']['not_adopted'] = DB::table('pets')->where('status', 0)->count();
             $jsonReturn['data']['deleted']     = DB::table('pets')->whereNotNull('deleted_at')->count();
             $jsonReturn['success'] = True;
+
         }catch(Exception $e){
 
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
             $jsonReturn['success'] = false;
-            $jsonReturn['error']   = array("Something went wrong while obtaining the data for the Total Widget");
+            $jsonReturn['error']   = "Something went wrong while obtaining the data for the Total Widget";
             $jsonReturn['data']    = $request;
             return response()->json($jsonReturn, 404);
 
@@ -48,42 +49,22 @@ class DashboardController extends Controller
         return response()->json($jsonReturn);
     }
 
-    public function dashboardPendingsAndRequests() 
+    public function dashboardPetsPending(Request $request) 
     {
-        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>[]);
+        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>'');
 
         try{
 
-            //Query
+            $jsonReturn['data']['current_not_adopted'] = Pet::where('status', 0)->count();
+            $jsonReturn['data']['pending_picked_up']   = Pet::where('status', 6)->count();
+            $jsonReturn['data']['pending_return']      = Pet::where('status', 5)->count();
 
             $jsonReturn['success'] = True;
         }catch(Exception $e){
 
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
             $jsonReturn['success'] = false;
-            $jsonReturn['error']   = array("Something went wrong while obtaining the data for the Widget requests and pets pending to...");
-            $jsonReturn['data']    = $request;
-            return response()->json($jsonReturn, 404);
-            
-        }
-
-        return response()->json($jsonReturn);
-    }
-
-    public function dashboardBarChart() 
-    {
-        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>[]);
-
-        try{
-
-            //Query
-
-            $jsonReturn['success'] = True;
-        }catch(Exception $e){
-
-            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
-            $jsonReturn['success'] = false;
-            $jsonReturn['error']   = array("Something went wrong while obtaining the data for the bar chart");
+            $jsonReturn['error']   = "Something went wrong while obtaining the data for the Widget of Pets pending to be picked up and return";
             $jsonReturn['data']    = $request;
             return response()->json($jsonReturn, 404);
             
@@ -92,9 +73,32 @@ class DashboardController extends Controller
         return response()->json($jsonReturn);
     }
 
-    public function dashboardLatestAdoptionsActions() 
+    public function dashboardPetsRequests(Request $request) 
     {
-        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>[]);
+        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>'');
+        
+        try{
+
+            $jsonReturn['data']['pets_requested_adoption'] = Pet::where('status', 1)->count();
+            $jsonReturn['data']['pets_requested_return']   = Pet::where('status', 3)->count();
+            $jsonReturn['success'] = True;
+
+        }catch(Exception $e){
+
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success'] = false;
+            $jsonReturn['error']   = "Something went wrong while obtaining the data for the Widget of Pets requetsed adoption and return";
+            $jsonReturn['data']    = $request;
+            return response()->json($jsonReturn, 404);
+            
+        }
+
+        return response()->json($jsonReturn);
+    }
+
+    public function dashboardBarChart(Request $request) 
+    {
+        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>'');
 
         try{
 
@@ -105,7 +109,29 @@ class DashboardController extends Controller
 
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
             $jsonReturn['success'] = false;
-            $jsonReturn['error']   = array("Something went wrong while obtaining the data for the table with the latest adoptions actions");
+            $jsonReturn['error']   = "Something went wrong while obtaining the data for the bar chart";
+            $jsonReturn['data']    = $request;
+            return response()->json($jsonReturn, 404);
+            
+        }
+
+        return response()->json($jsonReturn);
+    }
+
+    public function dashboardLatestAdoptionsActions(Request $request) 
+    {
+        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>'');
+
+        try{
+
+            //Query
+
+            $jsonReturn['success'] = True;
+        }catch(Exception $e){
+
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            $jsonReturn['success'] = false;
+            $jsonReturn['error']   = "Something went wrong while obtaining the data for the table with the latest adoptions actions";
             $jsonReturn['data']    = $request;
             return response()->json($jsonReturn, 404);
             

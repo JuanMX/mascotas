@@ -40,27 +40,27 @@
     {{-- Pets Summary  --}}
     <div class="row">
         <div class="col-sm">
-            <x-adminlte-small-box title="420" text="Current Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-yellow" url="pet/pet" url-text="Go to Manage Pets"/>
+            <x-adminlte-small-box id="widgetCurrentNotAdoptedPets" title="" text="Current Not Adopted Pets" icon="fas fa-fw fa-paw" class="bg-yellow" url="pet/pet" url-text="Go to Manage Pets"/>
         </div>
 
         <div class="col-sm">
-            <x-adminlte-small-box title="69" text="Pets pending to be picked up" icon="{{Helper::getAdoptionIcon()[9]}}" class="{{Helper::getAdoptionColor()[9]}}" url="pet/pickedup" url-text="Go to Mark Picked Up Pets"/>
+            <x-adminlte-small-box id="widgetPetsPendingPickedUp" title="" text="Pets pending to be picked up" icon="{{Helper::getAdoptionIcon()[9]}}" class="{{Helper::getAdoptionColor()[9]}}" url="pet/pickedup" url-text="Go to Mark Picked Up Pets"/>
         </div>
 
         <div class="col-sm">
-            <x-adminlte-small-box title="247" text="Pets pending to return at the shelter" icon="{{Helper::getIconArrivalShelter()}}" class="{{Helper::getColorArrivalShelter()}}" url="pet/return" url-text="Go to Mark Pets Returning to the shelter"/>
+            <x-adminlte-small-box id="widgetPetsPendingReturn" title="" text="Pets pending to return at the shelter" icon="{{Helper::getIconArrivalShelter()}}" class="{{Helper::getColorArrivalShelter()}}" url="pet/return" url-text="Go to Mark Pets Returning to the shelter"/>
         </div>
     </div>
 
-    {{-- Deliberation Summary  --}}
+    {{-- Requests Summary  --}}
 
     <div class="row">
         <div class="col-sm">
-            <x-adminlte-small-box title="420" text="Adoption Requests" icon="{{Helper::getAdoptionIcon()[0]}}" class="{{Helper::getAdoptionColor()[0]}}" url="adoption/deliberate-adoption" url-text="Go to Deliberate Adoption Requests"/>
+            <x-adminlte-small-box id="widgetPetAdoptionRequests" title="" text="Adoption Requests" icon="{{Helper::getAdoptionIcon()[0]}}" class="{{Helper::getAdoptionColor()[0]}}" url="adoption/deliberate-adoption" url-text="Go to Deliberate Adoption Requests"/>
         </div>
 
         <div class="col-sm">
-            <x-adminlte-small-box title="69" text="Return Requests" icon="{{Helper::getAdoptionIcon()[3]}}" class="{{Helper::getAdoptionColor()[3]}}" url="adoption/deliberate-return" url-text="Go to Deliberate Requests Requests"/>
+            <x-adminlte-small-box id="widgetPetReturnRequests" title="" text="Return Requests" icon="{{Helper::getAdoptionIcon()[3]}}" class="{{Helper::getAdoptionColor()[3]}}" url="adoption/deliberate-return" url-text="Go to Deliberate Requests Requests"/>
         </div>
     </div>
 
@@ -235,13 +235,36 @@
 <script>
     $(document).ready(function() {
 
-        let widgetTotalPetsJs = new _AdminLTE_InfoBox('widgetTotalPets');
-        let widgetAdoptedPetsJs = new _AdminLTE_InfoBox('widgetAdoptedPets');
+        $(document).Toasts('create', {
+            title: 'Welcome',
+            autohide: true,
+            delay: 5000,
+            class: 'bg-green',
+            icon: 'far fa-check-circle',
+        })
+
+        let widgetTotalPetsJs      = new _AdminLTE_InfoBox('widgetTotalPets');
+        let widgetAdoptedPetsJs    = new _AdminLTE_InfoBox('widgetAdoptedPets');
         let widgetNotAdoptedPetsJs = new _AdminLTE_InfoBox('widgetNotAdoptedPets');
-        let widgetDeletedPetsJs = new _AdminLTE_InfoBox('widgetDeletedPets');
+        let widgetDeletedPetsJs    = new _AdminLTE_InfoBox('widgetDeletedPets');
+
+        let widgetCurrentNotAdoptedPetsJS = new _AdminLTE_SmallBox('widgetCurrentNotAdoptedPets');
+        let widgetPetsPendingPickedUpJS   = new _AdminLTE_SmallBox('widgetPetsPendingPickedUp');
+        let widgetPetsPendingReturnJS     = new _AdminLTE_SmallBox('widgetPetsPendingReturn');
+
+        let widgetPetAdoptionRequestsJS   = new _AdminLTE_SmallBox('widgetPetAdoptionRequests');
+        let widgetPetReturnRequestsJS     = new _AdminLTE_SmallBox('widgetPetReturnRequests');
+
+        let text;
+        let progress;
+        let description;
+        let data;
+        let rep;
+        let repError="¿ ?";
 
         postFormData = new FormData();
         postFormData.append('_token', "{{csrf_token()}}");
+
         $.ajax({
             url: 'dashboard-total',
             type: 'POST',
@@ -249,16 +272,9 @@
             dataType: 'json',
             processData: false,  // tell jQuery not to process the data
             contentType: false,   // tell jQuery not to set contentType
-            
         })
         .done(function(response) {
             if(response.success){
-
-                // Update data.
-                let text;
-                let progress
-                let description;
-                let data;
 
                 text = response.data.total;
                 data = {text};
@@ -286,13 +302,92 @@
             else{
                 myHelper_toastErrorWithMessage(response.error);
             }
-            $(document).Toasts('create', {
-                title: 'Done',
-                autohide: true,
-                delay: 5000,
-                class: 'bg-green',
-                icon: 'far fa-check-circle',
-            })
+        })
+        .fail(function(response) {
+            myHelper_toastErrorWithMessage(response.responseJSON.error);
+        });
+
+        $.ajax({
+            url: 'dashboard-pets-pending',
+            type: 'POST',
+            data: postFormData,
+            dataType: 'json',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
+            beforeSend: function() {
+                widgetCurrentNotAdoptedPetsJS.toggleLoading();
+                widgetPetsPendingPickedUpJS.toggleLoading();
+                widgetPetsPendingReturnJS.toggleLoading();
+            }
+        })
+        .always(function() {
+            widgetCurrentNotAdoptedPetsJS.toggleLoading();
+            widgetPetsPendingPickedUpJS.toggleLoading();
+            widgetPetsPendingReturnJS.toggleLoading();
+        })
+        .done(function(response) {
+            if(response.success){
+
+                rep = (response.data.current_not_adopted).toString();
+                data = {title: rep};
+                widgetCurrentNotAdoptedPetsJS.update(data);
+
+                rep = (response.data.pending_picked_up).toString();
+                data = {title: rep};
+                widgetPetsPendingPickedUpJS.update(data);
+
+                rep = (response.data.pending_return).toString();
+                data = {title: rep};
+                widgetPetsPendingReturnJS.update(data);
+            }
+            else{
+                myHelper_toastErrorWithMessage(response.error);
+            }
+        })
+        .fail(function(response) {
+            data = {title: repError};
+            widgetCurrentNotAdoptedPetsJS.update(data);
+            widgetPetsPendingPickedUpJS.update(data);
+            widgetPetsPendingReturnJS.update(data);
+            myHelper_toastErrorWithMessage(response.responseJSON.error);
+        });
+
+        $.ajax({
+            url: 'dashboard-pets-requests',
+            type: 'POST',
+            data: postFormData,
+            dataType: 'json',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
+            beforeSend: function() {
+                widgetPetAdoptionRequestsJS.toggleLoading();
+                widgetPetReturnRequestsJS.toggleLoading();
+            }
+        })
+        .always(function() {
+            widgetPetAdoptionRequestsJS.toggleLoading();
+            widgetPetReturnRequestsJS.toggleLoading();
+        })
+        .done(function(response) {
+            if(response.success){
+
+                rep = (response.data.pets_requested_adoption).toString();
+                data = {title: rep};
+                widgetPetAdoptionRequestsJS.update(data);
+
+                rep = (response.data.pets_requested_return).toString();
+                data = {title: rep};
+                widgetPetReturnRequestsJS.update(data);
+            }
+            else{
+                myHelper_toastErrorWithMessage(response.error);
+            }
+        })
+        .fail(function(response) {
+            data = {title: repError};
+            widgetPetAdoptionRequestsJS.update(data);
+            widgetPetReturnRequestsJS.update(data);
+            myHelper_toastErrorWithMessage(response.responseJSON.error);
         });
 
         var areaChartData = {
