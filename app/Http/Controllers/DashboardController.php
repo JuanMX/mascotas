@@ -21,7 +21,13 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
-        return view('welcome');
+        $widget_table_data = DB::table('adoptions')
+            ->join('pets', 'pets.id', '=', 'adoptions.pet_id')
+            ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'pets.name AS pet_name', 'adoptions.status AS status', 'adoptions.note AS note')
+        ->latest('adoptions.created_at')->limit(10)->get();
+
+        return view('welcome', ['widget_table_data'=>$widget_table_data]);
     }
 
     public function dashboardTotal(Request $request) 
@@ -124,9 +130,14 @@ class DashboardController extends Controller
 
         try{
 
-            //Query
+            $jsonReturn['data'] = DB::table('adoptions')
+                ->join('pets', 'pets.id', '=', 'adoptions.pet_id')
+                ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
+                ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'pets.name AS pet_name', 'adoptions.status AS status', 'adoptions.note AS note')
+            ->latest('adoptions.created_at')->limit(10)->get()->toArray();
 
             $jsonReturn['success'] = True;
+
         }catch(Exception $e){
 
             Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());

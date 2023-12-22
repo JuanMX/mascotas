@@ -111,7 +111,7 @@
 
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-sm m-0">
+                        <table class="table table-sm m-0" id="table-latest-adoption-actions">
                             <thead>
                                 <tr>
                                     <th>Adopter</th>
@@ -122,86 +122,14 @@
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                    <td>Call of Duty IV</td>
-                                    <td><span class="badge badge-success">Shipped</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                                    <td>Samsung Smart TV</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                    <td>iPhone 6 Plus</td>
-                                    <td><span class="badge badge-danger">Delivered</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                    <td>Samsung Smart TV</td>
-                                    <td><span class="badge badge-info">Processing</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                                    <td>Samsung Smart TV</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                    <td>iPhone 6 Plus</td>
-                                    <td><span class="badge badge-danger">Delivered</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                    <td>Call of Duty IV</td>
-                                    <td><span class="badge badge-success">Shipped</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                    <td>Call of Duty IV</td>
-                                    <td><span class="badge badge-success">Shipped</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                    <td>Call of Duty IV</td>
-                                    <td><span class="badge badge-success">Shipped</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                    <td>Call of Duty IV</td>
-                                    <td><span class="badge badge-success">Shipped</span></td>
-                                    <td>
-                                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                                    </td>
-                                </tr>
+                                @foreach($widget_table_data as $table_row)
+                                    <tr>
+                                        <td>{{$table_row->name}}</td>
+                                        <td>{{$table_row->pet_name}}</td>
+                                        <td><span class="badge {{Helper::getAdoptionColor()[$table_row->status]}}">{{Helper::getAdoptionStatus()[$table_row->status]}}</span></td>
+                                        <td>{{$table_row->note}}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -209,17 +137,13 @@
                 </div>
 
                 <div class="card-footer clearfix">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-block btn-info"><i class="fas fa-sync-alt"></i> Refresh this table</a>
+                    <a id="btn-refresh" class="btn btn-sm btn-block btn-info"><i class="fas fa-sync-alt"></i> Refresh this table</a>
                     
                 </div>
 
             </div>
         </div>
     </div>
-
-    
-    
-        
     
 </div>
 @stop
@@ -459,7 +383,49 @@
             data: barChartData,
             options: barChartOptions
         })
-    });
 
+        $('#btn-refresh').click(function(event) {
+
+            event.preventDefault();
+
+            $.ajax({
+            url: 'dashboard-latest-adoptions-actions',
+            type: 'POST',
+            data: postFormData,
+            dataType: 'json',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
+            beforeSend: function() {
+                $('#btn-refresh').prop('disabled',true);
+                $('#btn-refresh').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Please wait . . .');
+            }
+            })
+            .always(function() {
+                $('#btn-refresh').prop('disabled',false);
+                $('#btn-refresh').html('<i class="fas fa-sync-alt"></i> Refresh this table');
+            })
+            .done(function(response) {
+                if(response.success){
+                    $("#table-latest-adoption-actions > tbody").empty();
+                    $.each(response.data, function( index, table_row ) {
+                        new_row = '<tr>';
+                        new_row = new_row + '<td>' + table_row.name + '</td>';
+                        new_row = new_row + '<td>' + table_row.pet_name + '</td>';
+                        new_row = new_row + '<td> <span class="badge '+{{Js::from(Helper::getAdoptionColor())}}[table_row.status]+'">' + {{Js::from(Helper::getAdoptionStatus())}}[table_row.status] + '</span></td>';
+                        new_row = new_row + '<td>' + table_row.note + '</td>';
+                        new_row = new_row + '</tr>';
+                        $('#table-latest-adoption-actions > tbody').append(new_row);
+                    });
+                }
+                else{
+                    myHelper_toastErrorWithMessage(response.error);
+                }
+            })
+            .fail(function(response) {
+
+                myHelper_toastErrorWithMessage(response.responseJSON.error);
+            });
+        });
+    });
 </script>
 @endpush

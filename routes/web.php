@@ -27,7 +27,7 @@ Route::post('/dashboard-total', [DashboardController::class, 'dashboardTotal']);
 Route::post('/dashboard-pets-pending', [DashboardController::class, 'dashboardPetsPending']);
 Route::post('/dashboard-pets-requests', [DashboardController::class, 'dashboardPetsRequests']);
 Route::post('/dashboard-bar-chart', [DashboardController::class, 'dashboardBarChart']);
-Route::post('/latest-adoptions-actions', [DashboardController::class, 'dashboardLatestAdoptionsActions']);
+Route::post('/dashboard-latest-adoptions-actions', [DashboardController::class, 'dashboardLatestAdoptionsActions']);
 
 Route::prefix('pet')->group(function () {
     Route::get('/pet', [PetController::class, 'index']);
