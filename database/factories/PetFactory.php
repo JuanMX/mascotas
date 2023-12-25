@@ -26,6 +26,7 @@ class PetFactory extends Factory
             'status' => 0,
             'note' => 'Mascota en perfecto estado de salud',
             'created_at' => now(),
+            'updated_at' => now(),
             /*
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),

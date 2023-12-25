@@ -71,7 +71,7 @@
 
             <div class="card card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title">Bar Chart</h3>
+                    <h3 class="card-title">{{date("Y")}} Pets first arrival at the shelter and Pets adoptions</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -116,6 +116,7 @@
                                 <tr>
                                     <th>Adopter</th>
                                     <th>Pet</th>
+                                    <th>Pet type</th>
                                     <th>Adoption type</th>
                                     <th>Note</th>
                                 </tr>
@@ -126,6 +127,7 @@
                                     <tr>
                                         <td>{{$table_row->name}}</td>
                                         <td>{{$table_row->pet_name}}</td>
+                                        <td>{{Helper::getPetType()[$table_row->pet_type]}}</td>
                                         <td><span class="badge {{Helper::getAdoptionColor()[$table_row->status]}}">{{Helper::getAdoptionStatus()[$table_row->status]}}</span></td>
                                         <td>{{$table_row->note}}</td>
                                     </tr>
@@ -185,6 +187,9 @@
         let data;
         let rep;
         let repError="¿ ?";
+
+        let bar_chart_arrivals  = [];
+        let bar_chart_adoptions = [];
 
         postFormData = new FormData();
         postFormData.append('_token', "{{csrf_token()}}");
@@ -314,75 +319,38 @@
             myHelper_toastErrorWithMessage(response.responseJSON.error);
         });
 
-        var areaChartData = {
-            labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [
-                {
-                label               : 'Digital Goods',
-                backgroundColor     : 'rgba(60,141,188,0.9)',
-                borderColor         : 'rgba(60,141,188,0.8)',
-                pointRadius          : false,
-                pointColor          : '#3b8bba',
-                pointStrokeColor    : 'rgba(60,141,188,1)',
-                pointHighlightFill  : '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data                : [28, 48, 40, 19, 86, 27, 90, 80, 17, 1, 22, 11]
-                },
-                {
-                label               : 'Electronics',
-                backgroundColor     : 'rgba(210, 214, 222, 1)',
-                borderColor         : 'rgba(210, 214, 222, 1)',
-                pointRadius         : false,
-                pointColor          : 'rgba(210, 214, 222, 1)',
-                pointStrokeColor    : '#c1c7d1',
-                pointHighlightFill  : '#fff',
-                pointHighlightStroke: 'rgba(220,220,220,1)',
-                data                : [65, 59, 80, 81, 56, 55, 40, 48, 65, 42, 31, 1]
-                },
-            ]
-        }
+        $.ajax({
+            url: 'dashboard-bar-chart',
+            type: 'POST',
+            data: postFormData,
+            dataType: 'json',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
+            beforeSend: function() {
 
-        var areaChartOptions = {
-            maintainAspectRatio : false,
-            responsive : true,
-            legend: {
-                display: false
-            },
-            scales: {
-                xAxes: [{
-                gridLines : {
-                    display : false,
-                }
-                }],
-                yAxes: [{
-                gridLines : {
-                    display : false,
-                }
-                }]
             }
-        }
-
-        //-------------
-        //- BAR CHART -
-        //-------------
-        var barChartCanvas = $('#chartArrivalsAdoptions').get(0).getContext('2d')
-        var barChartData = $.extend(true, {}, areaChartData)
-        var temp0 = areaChartData.datasets[0]
-        var temp1 = areaChartData.datasets[1]
-        barChartData.datasets[0] = temp1
-        barChartData.datasets[1] = temp0
-
-        var barChartOptions = {
-            responsive              : true,
-            maintainAspectRatio     : false,
-            datasetFill             : false
-        }
-
-        new Chart(barChartCanvas, {
-            type: 'bar',
-            data: barChartData,
-            options: barChartOptions
         })
+        .always(function() {
+
+        })
+        .done(function(response) {
+            if(response.success){
+                bar_chart_arrivals  = response.data_arrivals;
+                bar_chart_adoptions = response.data_adoptions;
+                
+                chart_2Bars(bar_chart_arrivals,bar_chart_adoptions)
+                
+            }
+            else{
+                myHelper_toastErrorWithMessage(response.error);
+            }
+        })
+        .fail(function(response) {
+            data = {title: repError};
+            myHelper_toastErrorWithMessage(response.responseJSON.error);
+        });
+
+        
 
         $('#btn-refresh').click(function(event) {
 
@@ -411,11 +379,13 @@
                         new_row = '<tr>';
                         new_row = new_row + '<td>' + table_row.name + '</td>';
                         new_row = new_row + '<td>' + table_row.pet_name + '</td>';
+                        new_row = new_row + '<td>' + {{Js::from(Helper::getPetType())}}[table_row.pet_type] + '</td>';
                         new_row = new_row + '<td> <span class="badge '+{{Js::from(Helper::getAdoptionColor())}}[table_row.status]+'">' + {{Js::from(Helper::getAdoptionStatus())}}[table_row.status] + '</span></td>';
                         new_row = new_row + '<td>' + table_row.note + '</td>';
                         new_row = new_row + '</tr>';
                         $('#table-latest-adoption-actions > tbody').append(new_row);
                     });
+                    myHelper_toastInfoWithMessage("Table refreshed");
                 }
                 else{
                     myHelper_toastErrorWithMessage(response.error);
@@ -426,6 +396,78 @@
                 myHelper_toastErrorWithMessage(response.responseJSON.error);
             });
         });
+
+        function chart_2Bars(bar1,bar2){
+            var areaChartData = {
+                labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [
+                    {
+                    label               : 'Pets adoptions',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius         : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data                : bar2,
+                    },
+                    {
+                    label               : 'Pets arrivals',
+                    backgroundColor     : 'rgba(210, 214, 222, 1)',
+                    borderColor         : 'rgba(210, 214, 222, 1)',
+                    pointRadius         : false,
+                    pointColor          : 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor    : '#c1c7d1',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data                : bar1,
+                    },
+                ]
+            }
+
+            var areaChartOptions = {
+                maintainAspectRatio : false,
+                responsive : true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                    gridLines : {
+                        display : false,
+                    }
+                    }],
+                    yAxes: [{
+                    gridLines : {
+                        display : false,
+                    }
+                    }]
+                }
+            }
+
+            //-------------
+            //- BAR CHART -
+            //-------------
+            var barChartCanvas = $('#chartArrivalsAdoptions').get(0).getContext('2d')
+            var barChartData = $.extend(true, {}, areaChartData)
+            var temp0 = areaChartData.datasets[0]
+            var temp1 = areaChartData.datasets[1]
+            barChartData.datasets[0] = temp1
+            barChartData.datasets[1] = temp0
+
+            var barChartOptions = {
+                responsive              : true,
+                maintainAspectRatio     : false,
+                datasetFill             : false
+            }
+
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+        }
     });
 </script>
 @endpush

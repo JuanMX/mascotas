@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'status' => 0,
             'note' => 'Mascota muy juguetona',
             'created_at' => $agoDate,
+            'updated_at' => $agoDate,
         ]);
         DB::table('pets')->insert([
             'name' => 'Chester',
@@ -39,6 +40,7 @@ class DatabaseSeeder extends Seeder
             'status' => 2,
             'note' => 'Es un poco agresivo, sería ideal como perro cuidador',
             'created_at' => $agoDate,
+            'updated_at' => $agoDate,
         ]);
 
         DB::table('adopters')->insert([
@@ -51,14 +53,16 @@ class DatabaseSeeder extends Seeder
             'status' => 0,
             'type' => 1,
             'created_at' => Carbon::yesterday(),
+            'updated_at' => Carbon::yesterday(),
         ]);
 
         DB::table('adoptions')->insert([
             'adopter_id' => 1,
             'pet_id' => 12,
             'status' => 0,
-            'note' => 'Solicitada una adopcion con la documentacion necesaria',
+            'note' => 'Quiero a una mascota para regalar',
             'created_at' => Carbon::yesterday(),
+            'updated_at' => Carbon::yesterday(),
         ]);
 
         DB::table('adoptions')->insert([
@@ -67,6 +71,7 @@ class DatabaseSeeder extends Seeder
             'status' => 1,
             'note' => 'Aceptada la adopcion de Chester',
             'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
         
 

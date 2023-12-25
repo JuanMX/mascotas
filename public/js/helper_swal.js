@@ -24,3 +24,13 @@ function myHelper_toastErrorWithMessage(message="ERROR"){
         icon: 'far fa-times-circle',
     })
 }
+
+function myHelper_toastInfoWithMessage(message=""){
+    $(document).Toasts('create', {
+        title: message,
+        autohide: true,
+        delay: 4444,
+        class: 'bg-info',
+        icon: 'fas fa-info-circle',
+    })
+}

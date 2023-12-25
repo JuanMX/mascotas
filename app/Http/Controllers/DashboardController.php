@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $widget_table_data = DB::table('adoptions')
             ->join('pets', 'pets.id', '=', 'adoptions.pet_id')
             ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
-            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'pets.name AS pet_name', 'adoptions.status AS status', 'adoptions.note AS note')
+            ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'pets.name AS pet_name', 'pets.type AS pet_type', 'adoptions.status AS status', 'adoptions.note AS note')
         ->latest('adoptions.created_at')->limit(10)->get();
 
         return view('welcome', ['widget_table_data'=>$widget_table_data]);
@@ -104,11 +104,27 @@ class DashboardController extends Controller
 
     public function dashboardBarChart(Request $request) 
     {
-        $jsonReturn = array('success'=>false, 'data'=>[], 'error'=>'');
+        $jsonReturn = array('success'=>false, 'data_arrivals'=>[], 'data_adoptions'=>[],'error'=>'');
 
         try{
+            $months = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+            $year = date("Y");
 
-            //Query
+            foreach ($months as $month) {
+
+                $month_count = Pet::where('status', 0)
+                    ->whereMonth('created_at', $month)
+                    ->whereYear('created_at', $year)
+                ->count();
+                array_push($jsonReturn['data_arrivals'], $month_count);
+                
+                $month_count = Pet::where('status', 2)
+                    ->whereMonth('updated_at', $month)
+                    ->whereYear('updated_at', $year)
+                ->count();
+
+                array_push($jsonReturn['data_adoptions'], $month_count);
+            }
 
             $jsonReturn['success'] = True;
         }catch(Exception $e){
@@ -133,7 +149,7 @@ class DashboardController extends Controller
             $jsonReturn['data'] = DB::table('adoptions')
                 ->join('pets', 'pets.id', '=', 'adoptions.pet_id')
                 ->join('adopters', 'adopters.id', '=', 'adoptions.adopter_id')
-                ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'pets.name AS pet_name', 'adoptions.status AS status', 'adoptions.note AS note')
+                ->select(DB::Raw('CONCAT(adopters.forename, " ", adopters.surname) AS name'), 'pets.name AS pet_name', 'pets.type AS pet_type', 'adoptions.status AS status', 'adoptions.note AS note')
             ->latest('adoptions.created_at')->limit(10)->get()->toArray();
 
             $jsonReturn['success'] = True;
