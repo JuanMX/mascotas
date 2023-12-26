@@ -7,11 +7,9 @@
 @stop
 
 @section('content')
-@section('plugins.Datatables', true)
-    
     <h2> <i class="fas fa-fw fa-paw" aria-hidden="true"></i> &nbsp; Pets Table</h2>
     <div>
-        <table id="table-all-pets" class="table table-hover">
+        <table id="table-all-pets" class="table table-hover display nowrap" style="width: 100%;">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -19,16 +17,16 @@
                     <th>Type</th>
                     <th>Age</th>
                     <th>Note</th>
-                    <th>Actions</th>
+                    <th data-priority="1">Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
 
-    <h2 class="pt-5"> <i class="fas fa-user-alt"></i> &nbsp; Adopters Table</h2>
+    <h2 class="pt-3"> <i class="fas fa-user-alt"></i> &nbsp; Adopters Table</h2>
     <div class="pb-3">
-        <table id="table-all-adopters" class="table table-hover">
+        <table id="table-all-adopters" class="table table-hover display nowrap" style="width:100%">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
@@ -40,7 +38,7 @@
                     <th>Age</th>
                     <th>Status</th>
                     <th>Type</th>
-                    <th>Actions</th>
+                    <th data-priority="1">Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -51,17 +49,20 @@
 @stop
 
 @section('css')
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @stop
 
 @section('js')
 <script src="{{ secure_asset('js/helper_swal.js') }}?v={{ env('VERSION_CSS_JS') }}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js" defer></script>
 <script type="text/javascript">
     $(document).ready( function () {
         $.fn.dataTable.ext.errMode = 'none';
         datatableAllPets = $('#table-all-pets').DataTable({
             "language": {
                 //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-            },  
+            },
+            "responsive": true,
             "searching": true,       
             "ajax": {
                 type: "POST",
@@ -95,6 +96,9 @@
                 },
                 {
                     "data": "note",
+                    render: function ( data, type, row ) {
+                        return '<span style="white-space:normal">' + data + "</span>";
+                    }
                 },
                 {
                     "data": "id",
@@ -165,7 +169,8 @@
         datatableAllAdopters = $('#table-all-adopters').DataTable({
             "language": {
                 //"url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-            },  
+            },
+            "responsive": true,
             "searching": true,       
             "ajax": {
                 type: "POST",
