@@ -1,68 +1,60 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
+# Sistema de administración para un refugio de mascotas
 
 ![demo](./public/README/record_231225_212036.gif)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este es un proyecto hecho con:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* [Laravel 10.25.2](https://laravel.com/docs/10.x/readme)
+* [Laravel-AdminLTE 3.9.2](https://github.com/jeroennoten/Laravel-AdminLTE)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Lo que hace este sistema es: dar de alta a las mascotas, solicitar una adopción y deliberar la adopcion de las mascotas.
 
-## Learning Laravel
+También permite: solicitar devoluciones de mascotas, deliberar las solicitudes de devolución y marcar la acción de recogida y devolución de las mascotas al refugio.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Por último, el sistema tiene una sección donde se puede ver, por cada mascota su linea de tiempo. También por cada adoptante se puede ver su linea de tiempo.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Al deliberar la adopción o devolución de la mascota se le notifica al adoptante mediante email. 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Para mandar un email yo usé un [*Laravel Markdown Mailable*](https://laravel.com/docs/10.x/mail#generating-markdown-mailables), que después [personalicé](https://laravel.com/docs/10.x/mail#customizing-the-components).
 
-## Laravel Sponsors
+## Ejemplo de uso para adoptar una mascota
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Ir a la sección *Request adoption* y seleccionar de la lista a una mascota, después dar click en el botón de acción (columna *Actions*) para que el sistema pida la información del adoptante. El resultado al llenar el formulario es una solicitud de adopción.
 
-### Premium Partners
+![demo](./public/README/demo_request_adoption.png)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+![demo](./public/README/demo_request_adoption_form_2.png)
 
-## Contributing
+## Ejemplo de deliberar una adopción
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Ir a la sección *Deliberate ADOPTION requests* y seleccionar el registro que se quiere deliberar.
 
-## Code of Conduct
+Al usar cualquiera de los botones de acción pedirá agregar un mensaje que se le enviará al adoptante mediante email.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+![demo](./public/README/demo_deliberate_requests.png)
 
-## Security Vulnerabilities
+![demo](./public/README/demo_deliberate_requests_message.png)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+![demo](./public/README/demo_deliberate_requests_email.png)
+
+## Ejemplo de marcar a una mascota como recogida
+
+Ir a la sección *Mark picked up pets* y usar el botón de acción cuando la mascota fue recogida.
+
+Al usar el botón de acción el sistema pedirá agregar una nota, se debe colocar obligatoriamente una observación.
+
+![demo](./public/README/demo_mark_pets_picked_up.png)
+
+![demo](./public/README/demo_mark_pets_picked_up_note.png)
+
+## Ver la linea de tiempo de una mascota
+
+Ir a la sección *Pet and Adopter Timeline* y en la tabla de mascotas o de adoptantes seleccionar un registro, después dar click en el botón de acción.
+
+![demo](./public/README/record_231226_232411.gif)
 
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+AdminLTE is an open source project that is licensed under the [MIT license](https://adminlte.io/docs/3.1//license.html)
