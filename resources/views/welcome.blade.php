@@ -71,7 +71,7 @@
 
             <div class="card card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title">{{date("Y")}} {{Helper::getPetStatus()[0]}} Pets first arrival at the shelter and Pets adoptions</h3>
+                    <h3 class="card-title" id="card-chart-title"> {{date("Y")}} {{Helper::getPetStatus()[0]}} Pets first arrival at the shelter and Pets adoptions </h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -327,11 +327,11 @@
             processData: false,  // tell jQuery not to process the data
             contentType: false,   // tell jQuery not to set contentType
             beforeSend: function() {
-
+                $('#card-chart-title').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Please wait . . .');
             }
         })
         .always(function() {
-
+            $('#card-chart-title').text('{{date("Y")}} {{Helper::getPetStatus()[0]}} Pets first arrival at the shelter and Pets adoptions');
         })
         .done(function(response) {
             if(response.success){

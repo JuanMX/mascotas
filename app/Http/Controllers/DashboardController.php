@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
             $jsonReturn['data']['total']       = DB::table('pets')->count();
             $jsonReturn['data']['adopted']     = DB::table('pets')->where('status', 2)->count();
-            $jsonReturn['data']['not_adopted'] = DB::table('pets')->where('status', 0)->count();
+            $jsonReturn['data']['not_adopted'] = DB::table('pets')->where('status', 0)->whereNull('deleted_at')->count();
             $jsonReturn['data']['deleted']     = DB::table('pets')->whereNotNull('deleted_at')->count();
             $jsonReturn['success'] = True;
 
