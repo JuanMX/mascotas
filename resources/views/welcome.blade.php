@@ -71,7 +71,7 @@
 
             <div class="card card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title">{{date("Y")}} Pets first arrival at the shelter and Pets adoptions</h3>
+                    <h3 class="card-title">{{date("Y")}} {{Helper::getPetStatus()[0]}} Pets first arrival at the shelter and Pets adoptions</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>

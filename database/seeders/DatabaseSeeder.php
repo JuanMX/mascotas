@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        Pet::factory()->count(10)->create();
+        Pet::factory()->count(20)->create();
         
         $currentDate = Carbon::now();
-        $agoDate = $currentDate->subDays($currentDate->dayOfWeek)->subWeek();
+        $agoDate = $currentDate->startOfMonth()->subMonthsNoOverflow()->toDateString();;
         
         DB::table('pets')->insert([
             'name' => 'Queso',
@@ -33,17 +33,18 @@ class DatabaseSeeder extends Seeder
             'created_at' => $agoDate,
             'updated_at' => $agoDate,
         ]);
-        DB::table('pets')->insert([
+
+        $custom_pet_insertion = DB::table('pets')->insertGetId([
             'name' => 'Chester',
             'age' => rand(0,3),
             'type' => 1,
-            'status' => 2,
+            'status' => 6,
             'note' => 'Es un poco agresivo, sería ideal como perro cuidador',
             'created_at' => $agoDate,
             'updated_at' => $agoDate,
         ]);
 
-        DB::table('adopters')->insert([
+        $custom_adopter_insertion = DB::table('adopters')->insertGetId([
             'forename' => 'Juan',
             'surname' => 'MX',
             'address' => 'Calle falsa 1234',
@@ -57,8 +58,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('adoptions')->insert([
-            'adopter_id' => 1,
-            'pet_id' => 12,
+            'adopter_id' => $custom_adopter_insertion,
+            'pet_id' => $custom_pet_insertion,
             'status' => 0,
             'note' => 'Quiero a una mascota para regalar',
             'created_at' => Carbon::yesterday(),
@@ -66,10 +67,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('adoptions')->insert([
-            'adopter_id' => 1,
-            'pet_id' => 12,
+            'adopter_id' => $custom_adopter_insertion,
+            'pet_id' => $custom_pet_insertion,
             'status' => 1,
-            'note' => 'Aceptada la adopcion de Chester',
+            'note' => 'Aceptada la adopcion de Chester y queda pendiente su recoleccion',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
