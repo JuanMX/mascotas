@@ -113,7 +113,7 @@ Composer update failed: composer.phar could not be written.
 
 Como se muestra en el siguiente [hilo de GitHub](https://github.com/composer/composer/issues/10444). 
 
-La solución recomendada es: **Cambiar la [versión de PHP](https://windows.php.net/download#php-8.3) de Laragon** hasta encontrar una versión que no muestre errores. Se sugiere que la versión de PHP a la que se cambie sea `>=8.1`.
+La solución recomendada es: ***Cambiar la [versión de PHP](https://windows.php.net/download#php-8.3) de Laragon*** hasta encontrar una versión que no muestre errores. Se sugiere que la versión de PHP a la que se cambie sea `>= 8.1`.
 
 ## *Levantar* el proyecto clonado
 
@@ -126,3 +126,5 @@ La entrada de blog se encuentra [aquí](https://juanmx.github.io/2022/05/21/apun
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 AdminLTE is an open source project that is licensed under the [MIT license](https://adminlte.io/docs/3.1//license.html)
+
+Este proyecto se encuentra bajo la licencia [MIT](./LICENSE)
