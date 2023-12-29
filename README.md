@@ -53,6 +53,12 @@ Ir a la sección *Pet and Adopter Timeline* y en la tabla de mascotas o de adopt
 
 ![demo](./public/README/record_231226_232411.gif)
 
+
+<br>
+<hr>
+<br>
+
+
 # Obtener y usar el código fuente (para desarrolladores)
 
 Las instrucciones mostradas a continuación serán enfocadas a [Laragon](https://laragon.org/), que es lo que yo uso y recomiendo. Laragon es para sistemas Windows.
