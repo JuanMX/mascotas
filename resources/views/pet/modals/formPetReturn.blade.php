@@ -6,7 +6,7 @@
         <x-adminlte-input name="arr_idAdopter_idPet" id="id" type="hidden" placeholder="" label-class=""></x-adminlte-input>
 
         {{-- Minimal with placeholder --}}
-        <x-adminlte-textarea label="Note" name="note" id="note" placeholder=""/>
+        <x-adminlte-textarea label="Note" name="note" id="note" placeholder="" required/>
         
 
         <div class="custom-control custom-checkbox">

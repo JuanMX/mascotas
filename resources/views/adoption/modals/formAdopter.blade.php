@@ -33,7 +33,7 @@
             <div class="col">
                 {{-- Input number minimal --}}
                 <x-adminlte-input name="age" id="age" label="Age" placeholder="" type="number" required=""
-                    min=1 max=999>
+                    min=1 max=150>
                 </x-adminlte-input>
             </div>
             <div class="col">
@@ -51,7 +51,7 @@
         {{-- Minimal with placeholder --}}
         <x-adminlte-textarea label="Address" rows=1  name="address" id="address" placeholder="" required=""/>
 
-        <x-adminlte-textarea label="Optional adoption note" name="note" id="note" placeholder="Adopter. Why do you want to adopt the pet?" required=""/>
+        <x-adminlte-textarea label="Adoption note" name="note" id="note" placeholder="Adopter. Why do you want to adopt the pet?" required=""/>
 
     </form>
 

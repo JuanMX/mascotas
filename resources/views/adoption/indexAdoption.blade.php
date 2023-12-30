@@ -10,7 +10,7 @@
 @section('content')
     
     <div class="pt-3 pb-5">
-        <table id="table-pet" class="table table-sm table-hover">
+        <table id="table-pet" class="table table-sm table-hover" style="width: 100%;">
             <input type="hidden" name="_token" content="{{ csrf_token() }}" value="{{ csrf_token() }}" id="_token">
             <thead>
                 <tr>
