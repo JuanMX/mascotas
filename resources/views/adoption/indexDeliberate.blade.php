@@ -212,6 +212,9 @@
                         myHelper_swalGenericError();
                     });
                 }
+                else{
+                    myHelper_toastErrorWithMessage("An email message is required");
+                }
             })()
             
         });

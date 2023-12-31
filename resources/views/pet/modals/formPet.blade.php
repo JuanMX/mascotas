@@ -12,7 +12,7 @@
 
         {{-- Input number minimal --}}
         <x-adminlte-input name="age" id="age" label="Age" placeholder="" type="number"
-             min=1 max=999 step=".01">
+             min=1 max=200 step=".01">
         </x-adminlte-input>
 
         {{-- Example with placeholder (for Select) --}}

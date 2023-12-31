@@ -185,7 +185,7 @@
                         Swal.close();
                         Swal.fire({
                             title: "Done",
-                            text: "A return request was created for " + data['name'] + " ( " + data['petname'] + " ) ",
+                            text: "A return request was created for: " + data['name'] + " ( " + data['petname'] + " ) ",
                             type: "success"
                         });
                         $('#table-pet').DataTable().ajax.reload(null, false);
@@ -194,6 +194,9 @@
                         Swal.close();
                         myHelper_swalGenericError();
                     });
+                }
+                else{
+                    myHelper_toastErrorWithMessage("A note is required");
                 }
             })()
         });
