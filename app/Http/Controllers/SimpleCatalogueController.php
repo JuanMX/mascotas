@@ -14,7 +14,7 @@ class SimpleCatalogueController extends Controller
 {
     public function index(Request $request, string $catalogue): View
     {
-        if(str_ends_with($catalogue, env('CATALOGUE_SUFFIX'))){
+        if(str_ends_with($catalogue, env('SIMPLE_CATALOGUE_SUFFIX'))){
             return view('catalogue.indexSimpleCatalogue', [
                 'catalogue' => $catalogue
             ]);

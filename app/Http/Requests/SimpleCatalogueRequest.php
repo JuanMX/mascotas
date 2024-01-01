@@ -23,7 +23,7 @@ class SimpleCatalogueRequest extends FormRequest
     {
         return [
             'catalogue.required'  => 'A catalogue name is required',
-            'catalogue.ends_with' => 'It is required a catalogue suffix in order to work with a catalogue table. A valid suffix is: ' . env('CATALOGUE_SUFFIX'),
+            'catalogue.ends_with' => 'It is required a catalogue suffix in order to work with a catalogue table. A valid suffix is: ' . env('SIMPLE_CATALOGUE_SUFFIX'),
         ];
     }
 
@@ -35,7 +35,7 @@ class SimpleCatalogueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'catalogue' => 'required|ends_with:' . env('CATALOGUE_SUFFIX'),
+            'catalogue' => 'required|ends_with:' . env('SIMPLE_CATALOGUE_SUFFIX'),
         ];
     }
 }
