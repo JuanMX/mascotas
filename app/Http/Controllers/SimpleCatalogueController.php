@@ -8,23 +8,31 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 Use Exception;
+use App\Http\Requests\SimpleCatalogueRequest;
 
 class SimpleCatalogueController extends Controller
 {
     public function index(Request $request, string $catalogue): View
     {
-        return view('catalogue.indexSimpleCatalogue', [
-            'catalogue' => $catalogue
-        ]);
+        if(str_ends_with($catalogue, env('CATALOGUE_SUFFIX'))){
+            return view('catalogue.indexSimpleCatalogue', [
+                'catalogue' => $catalogue
+            ]);
+        }
+        else{
+            abort(500);
+        }
+        
     }
 
-    public function create(Request $request){
+    public function create(SimpleCatalogueRequest $request){
         
         $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
 
         $record = DB::table($request->catalogue)->insert([
             'name' => $request->name,
             'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $jsonReturn['success'] = true;
@@ -32,7 +40,7 @@ class SimpleCatalogueController extends Controller
         return response()->json($jsonReturn);
     }
 
-    public function read(Request $request){
+    public function read(SimpleCatalogueRequest $request){
 
         $jsonReturn = array('success'=>false,'data'=>[]);
         
@@ -54,7 +62,7 @@ class SimpleCatalogueController extends Controller
         return response()->json($jsonReturn);
     }
 
-    public function update(Request $request){
+    public function update(SimpleCatalogueRequest $request){
         
         $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
 
@@ -67,7 +75,7 @@ class SimpleCatalogueController extends Controller
         return response()->json($jsonReturn);
     }
 
-    public function delete(Request $request){
+    public function delete(SimpleCatalogueRequest $request){
         
         $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
 

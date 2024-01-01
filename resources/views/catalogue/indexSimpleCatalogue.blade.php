@@ -63,14 +63,7 @@
                     else{
                         return data.data;
                     }
-                } 
-            },
-            fail: function (data) {
-                console.log(data);
-            },
-            done: function (data)
-            {
-                console.log(data);
+                }
             },
             "columns": [
                 {
@@ -175,7 +168,7 @@
                     myHelper_swalGenericError();
                 }
             })
-            .fail(function() {
+            .fail(function(response) {
                 myHelper_swalGenericError();
             });
         });
