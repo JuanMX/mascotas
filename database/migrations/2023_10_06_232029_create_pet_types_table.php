@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 250);
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at');
+            $table->comment('This is a catalogue table. Because it ends with: "' . env('SIMPLE_CATALOGUE_SUFFIX') . '"');
         });
     }
 
