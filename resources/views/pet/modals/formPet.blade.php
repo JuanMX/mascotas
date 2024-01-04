@@ -12,14 +12,14 @@
 
         {{-- Input number minimal --}}
         <x-adminlte-input name="age" id="age" label="Age" placeholder="" type="number"
-             min=1 max=200 step=".01">
+             min=0 max=200 step=".01">
         </x-adminlte-input>
 
         {{-- Example with placeholder (for Select) --}}
         
         @php 
             $pet_statuses = Helper::getPetStatus();
-            $pet_types = Helper::pluckSimpleCatalogue('link_types');
+            $pet_types = Helper::pluckSimpleCatalogue('pet_types');
         @endphp
 
         {{--<x-adminlte-select name="status" id="status" label="Pet status">--}}
