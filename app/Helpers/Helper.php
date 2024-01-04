@@ -3,6 +3,9 @@
 namespace App\Helpers;
 use App\Models\PetType;
 use App\Models\AdopterType;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+Use Exception;
 
 class Helper
 {
@@ -100,7 +103,28 @@ class Helper
 
         return $adopter_status;
     }
+
     public static function project_root(){
         return Request::root();
+    }
+
+    public static function pluckSimpleCatalogue( string $catalogue ){
+        
+        $result = array('placeholder'=>'Invalid catalogue. Error getting data', 'data'=>[]);
+        
+        try {
+            if(str_ends_with($catalogue, env('SIMPLE_CATALOGUE_SUFFIX'))){
+                $result['data'] = DB::table($catalogue)->whereNull('deleted_at')->pluck('name','id')->toArray();
+                $result['placeholder'] = 'Please select';
+            }
+            else{
+                Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . __LINE__ . '): ' . 'Catalogue does not exists or name not ends with: ' . env('SIMPLE_CATALOGUE_SUFFIX') );
+            }
+        } catch(Exception $e) {
+            Log::error(__CLASS__ . '/' . __FUNCTION__ . ' (Line: ' . $e->getLine() . '): ' . $e->getMessage());
+            return $result;
+        }
+        
+        return $result;
     }
 }

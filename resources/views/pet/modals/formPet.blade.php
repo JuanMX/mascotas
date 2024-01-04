@@ -19,7 +19,7 @@
         
         @php 
             $pet_statuses = Helper::getPetStatus();
-            $pet_types = Helper::getPetType();
+            $pet_types = Helper::pluckSimpleCatalogue('link_types');
         @endphp
 
         {{--<x-adminlte-select name="status" id="status" label="Pet status">--}}
@@ -27,8 +27,8 @@
         {{--</x-adminlte-select>--}}
 
         <x-adminlte-select name="type" id="type" label="Type of pet">
-            <x-adminlte-options :options="$pet_types" disabled=""
-                placeholder="Select type"/>
+            <x-adminlte-options :options="$pet_types['data']" disabled=""
+                placeholder="{{$pet_types['placeholder']}}"/>
         </x-adminlte-select>
 
         {{-- Minimal with placeholder --}}
