@@ -389,7 +389,6 @@ return [
                     'text' => 'Pet',
                     'url'  => 'catalogue/pet_types',
                 ],
-                
                 [
                     'text' => 'Adopter',
                     'url'  => 'catalogue/adopter_types',

@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <x-adminlte-alert id="adminlte-alert" theme="warning" title="Changes made will affect all records" dismissable></x-adminlte-alert>
+    <x-adminlte-alert id="adminlte-alert" theme="warning" title="EDITIONS will affect all records. And it is suggested not to DELETE old records" dismissable></x-adminlte-alert>
 
     <div class="pb-3">
         <button type="button" class="btn btn-md btn-primary" id="btn-new-record" name="btn-new-record"><i class="fas fa-plus-circle" aria-hidden="true"></i> New Record</button>
