@@ -5,6 +5,7 @@ use App\Models\PetType;
 use App\Models\AdopterType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Request;
 Use Exception;
 
 class Helper
