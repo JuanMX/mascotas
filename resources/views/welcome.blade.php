@@ -161,6 +161,7 @@
 <script>
     $(document).ready(function() {
 
+        /*
         $(document).Toasts('create', {
             title: 'Welcome',
             autohide: true,
@@ -168,7 +169,8 @@
             class: 'bg-green',
             icon: 'far fa-check-circle',
         })
-
+        */
+       
         let widgetTotalPetsJs      = new _AdminLTE_InfoBox('widgetTotalPets');
         let widgetAdoptedPetsJs    = new _AdminLTE_InfoBox('widgetAdoptedPets');
         let widgetNotAdoptedPetsJs = new _AdminLTE_InfoBox('widgetNotAdoptedPets');

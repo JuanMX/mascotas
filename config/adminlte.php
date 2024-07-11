@@ -299,6 +299,41 @@ return [
         ],
         */
         [
+            'text' => '',
+            'icon' => 'far fa-bell',
+            'label' => 2,
+            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Notifications of the day',
+                    'url' => '#',
+                    'classes' => 'dropdown-menu-xl dropdown-header',
+                ],
+                [
+                    'text' => 'Pet arrived',
+                    'url' => 'notifications/1',
+                    'icon' => 'fas fa-arrow-alt-circle-down mr-2',
+                    'label' => "1 minute ago",
+                    'label_color' => 'light float-right text-muted',
+                ],
+                
+                [
+                    'text' => 'Requested adoption',
+                    'url' => 'notifications/2',
+                    'icon' => 'fas fa-hand-holding-heart mr-2',
+                    'label' => "7 minutes ago",
+                    'label_color' => 'light float-right text-muted',
+                ],
+                [
+                    'text' => 'View All',
+                    'url' => 'notifications',
+                    'classes' => 'dropdown-footer',
+                ],
+                
+            ],
+            'topnav_right' => true,
+        ],
+        [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
         ],
