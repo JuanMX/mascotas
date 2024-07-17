@@ -303,30 +303,31 @@ return [
             'icon' => 'far fa-bell',
             'label' => 2,
             'label_color' => 'success',
+            'id' => 'navbar-notifications',
             'submenu' => [
                 [
-                    'text' => 'Notifications of the day',
+                    'text' => 'Adoption Status Notification',
                     'url' => '#',
                     'classes' => 'dropdown-menu-xl dropdown-header',
                 ],
                 [
-                    'text' => 'Pet arrived',
-                    'url' => 'notifications/1',
-                    'icon' => 'fas fa-arrow-alt-circle-down mr-2',
+                    'text' => 'Requested adoption',
+                    'url' => 'adoption-notification/1',
+                    'icon' => 'fas fa-hand-holding-heart mr-2',
                     'label' => "1 minute ago",
                     'label_color' => 'light float-right text-muted',
                 ],
                 
                 [
-                    'text' => 'Requested adoption',
-                    'url' => 'notifications/2',
-                    'icon' => 'fas fa-hand-holding-heart mr-2',
+                    'text' => 'Acepted adoption',
+                    'url' => 'adoption-notification/2',
+                    'icon' => 'fas fa-check-circle mr-2',
                     'label' => "7 minutes ago",
                     'label_color' => 'light float-right text-muted',
                 ],
                 [
                     'text' => 'View All',
-                    'url' => 'notifications',
+                    'url' => 'adoption-notification',
                     'classes' => 'dropdown-footer',
                 ],
                 

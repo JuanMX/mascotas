@@ -6,6 +6,7 @@ use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\SimpleCatalogueController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdoptionNotificationController;
 
 use App\Mail\AdoptionDeliberation;
 
@@ -82,3 +83,6 @@ Route::prefix('catalogue')->group(function () {
     Route::patch('/update', [SimpleCatalogueController::class, 'update']);
     Route::delete('/delete', [SimpleCatalogueController::class, 'delete']);
 });
+
+Route::get('/adoption-notification/{id?}', [AdoptionNotificationController::class, 'index']);
+Route::post('/adoption-notification', [AdoptionNotificationController::class, 'read']);
