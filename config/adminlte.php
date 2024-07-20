@@ -299,44 +299,9 @@ return [
         ],
         */
         [
-            'text' => '',
-            'icon' => 'far fa-bell',
-            'label' => 2,
-            'label_color' => 'success',
-            'id' => 'navbar-notifications',
-            'submenu' => [
-                [
-                    'text' => 'Adoption Status Notification',
-                    'url' => '#',
-                    'classes' => 'dropdown-menu-xl dropdown-header',
-                ],
-                [
-                    'text' => 'Requested adoption',
-                    'url' => 'adoption-notification/1',
-                    'icon' => 'fas fa-hand-holding-heart mr-2',
-                    'label' => "1 minute ago",
-                    'label_color' => 'light float-right text-muted',
-                ],
-                
-                [
-                    'text' => 'Acepted adoption',
-                    'url' => 'adoption-notification/2',
-                    'icon' => 'fas fa-check-circle mr-2',
-                    'label' => "7 minutes ago",
-                    'label_color' => 'light float-right text-muted',
-                ],
-                [
-                    'text' => 'View All',
-                    'url' => 'adoption-notification',
-                    'classes' => 'dropdown-footer',
-                ],
-                
-            ],
-            'topnav_right' => true,
-        ],
-        [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
+            'key'          => 'fullscreen-widget'
         ],
 
         // Sidebar items:
