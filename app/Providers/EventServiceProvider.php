@@ -43,7 +43,7 @@ class EventServiceProvider extends ServiceProvider
 
             $event->menu->addBefore('fullscreen-widget',[
                 'text'        => '',
-                'icon'        => 'far fa-bell',
+                'icon'        => 'fas fa-hand-holding-heart',
                 'label'       => Adoption::whereDate('created_at', Carbon::today())->count(),
                 'label_color' => 'success',
                 'id'          => 'navbar-notifications',
@@ -58,7 +58,7 @@ class EventServiceProvider extends ServiceProvider
             ]);
 
             $event->menu->addIn('navbar-notifications', ...$items);
-            
+
             $event->menu->addIn('navbar-notifications', [
                 'text' => 'View All',
                 'url' => 'adoption-notification',

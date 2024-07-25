@@ -369,4 +369,18 @@ class AdoptionController extends Controller
     {
         return view('adoption.indexDeliberateReturn');
     }
+
+    public function newAdoptionRequest(Request $request, ?string $id = null): View
+    {
+        if(is_numeric($id)){
+            $id = intval($id);
+        }
+        else{
+            abort(404);
+        }
+        $pet = Pet::where('id', $id)->first();
+        return view('adoption.newAdoptionRequest', [
+            'pet' => $pet
+        ]);
+    }
 }
