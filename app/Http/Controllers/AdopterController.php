@@ -8,6 +8,9 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use App\Models\Adopter;
 
+use Helper;
+Use Exception;
+
 class AdopterController extends Controller
 {
     public function listAllAdopters(Request $request){
@@ -24,5 +27,27 @@ class AdopterController extends Controller
         }
 
         return response()->json(['data'=>$jsonReturn['data']]);
+    }
+
+    public function adopterSearchField(Request $request){
+        
+        $jsonReturn = array('success'=>false, 'data'=>[], 'data_count'=>0,'message'=>'');
+
+        $phone_number = preg_replace("/[^0-9]/", "", $request->inputSearch);
+
+        $query = Adopter::orWhere('email', $request->inputSearch)->orWhere('phone', $phone_number)->orWhere('surname', 'like', '%'.$request->inputSearch.'%')->get();
+        
+        $jsonReturn['data'] = $query->toArray();
+
+        $jsonReturn['data_count'] = $query->count();
+        
+        if($jsonReturn['data'] && $jsonReturn['data_count'] > 0){
+            $jsonReturn['success'] = true;
+        }
+        else{
+            $jsonReturn['message'] = $request->inputSearch.' did not produce any result';
+        }
+        
+        return response()->json($jsonReturn);
     }
 }

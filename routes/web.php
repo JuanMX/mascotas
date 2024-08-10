@@ -86,5 +86,9 @@ Route::prefix('catalogue')->group(function () {
     Route::delete('/delete', [SimpleCatalogueController::class, 'delete']);
 });
 
+Route::prefix('adopter')->group(function () {
+    Route::post('/adopter-search-field', [AdopterController::class, 'adopterSearchField']);
+});
+
 Route::get('/adoption-notification/{id?}', [AdoptionNotificationController::class, 'index']);
 Route::post('/adoption-notification', [AdoptionNotificationController::class, 'read']);

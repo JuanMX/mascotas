@@ -130,14 +130,14 @@
             event.preventDefault();
             var currentRow = $(this).closest("tr");
             var data = $('#table-pet').DataTable().row(currentRow).data();
-            window.location.href = "/adoption/new-adoption-request/"+data['id']+'/'+{{Js::from(Helper::getPetType())}}[data['type']]+'-'+data['name'];
-            //myTODO remove or use the Helper:: in pet data[type] 
-            /*
-            $('#formCreate')[0].reset();
-            $('#modalMin').find('.modal-title').text("Adopter for " + data['name'] + " Type " + {{Js::from(Helper::getPetType())}}[data['type']]);
-            $('#petid').val(data['id']);
-            $('#modalMin').modal('show');
-            */
+            var typeName = {{Js::from(Helper::getPetType())}}[data['type']]+'-'+data['name'];
+            const toKebabCase = str =>
+            str &&
+            str
+                .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+                //.map(x => x.toLowerCase())
+                .join('-');
+            window.location.href = "/adoption/new-adoption-request/"+data['id']+'/'+ toKebabCase(typeName);
         });
 
         $('#formCreate').on('submit', function(e){

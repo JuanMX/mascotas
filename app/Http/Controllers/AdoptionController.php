@@ -214,6 +214,7 @@ class AdoptionController extends Controller
 
     public function adoptionRequest(Request $request){
 
+        dd($request);
         $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
 
         try{
