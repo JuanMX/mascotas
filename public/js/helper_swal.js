@@ -34,3 +34,16 @@ function myHelper_toastInfoWithMessage(message=""){
         icon: 'fas fa-info-circle',
     })
 }
+
+function myHelper_swalListArrErrors(arr_errors){
+    html_errors="<ul>";
+    arr_errors.forEach((element) => html_errors+="<li>"+element+"</li>");
+    html_errors+="</ul>";
+    swal.fire({
+        title: 'Can not request the adoption<br>The following errors were found:',
+        html: html_errors,
+        type: 'error',
+        allowOutsideClick: false,
+        confirmButtonText: 'OK',
+    });
+}

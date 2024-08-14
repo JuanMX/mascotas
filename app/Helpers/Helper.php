@@ -128,4 +128,9 @@ class Helper
         
         return $result;
     }
+
+    public static function cleanPhoneNumber($phone_with_numbers_and_symbols){//only returns the numbers: '+01 (234) 5678' => '012345678'
+        $phone_cleaned = preg_replace("/[^0-9]/", "", $phone_with_numbers_and_symbols);
+        return $phone_cleaned;
+    }
 }

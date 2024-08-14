@@ -38,8 +38,9 @@ class EventServiceProvider extends ServiceProvider
                     'icon' => Helper::getAdoptionIcon()[$notificacion['status']].' mr-2',
                     'label' => $notificacion['created_at']->diffForHumans(),
                     'label_color' => (Carbon::parse($notificacion['created_at'])->isToday() ? 'success' : 'light text-muted') . ' float-right',
+                    'created_at' => $notificacion['created_at'],
                 ];
-            })->sortBy(['label', 'asc'])->skip(0)->take(15);
+            })->sortBy(['created_at','desc'])->skip(0)->take(15);
 
             $event->menu->addBefore('fullscreen-widget',[
                 'text'        => '',

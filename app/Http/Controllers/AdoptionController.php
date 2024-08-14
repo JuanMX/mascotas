@@ -17,6 +17,7 @@ use App\Mail\AdoptionDeliberation;
 
 use Helper;
 Use Exception; //myTODO put this in all controllers
+use Illuminate\Support\Facades\Validator;
 
 //omnipresent controller for adoption change status
 // and get data for timeline
@@ -213,32 +214,50 @@ class AdoptionController extends Controller
 
 
     public function adoptionRequest(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            'forename' => 'required|max:250',
+            'surname' => 'required|max:250',
+            'phone' => 'nullable|string|max:100',
+            'email' => 'required|max:250',
+            'age' => 'required|integer|min:10',
+            'type' => 'required',
+            'address' => 'required',
+            'note' => 'required',
+        ],
+        [
+            'required' => 'The :attribute field is required.',
+            'max' => 'The :attribute field is at nost :max characters.',
+            'age.min' => 'Age is at least 10 years'
+        ]
+        );
 
-        dd($request);
         $jsonReturn = array('success'=>false, 'error'=>[], 'data'=>[]);
+
+        if ($validator->fails()) {
+            $jsonReturn['error'] = $validator->errors()->all();
+            return response()->json($jsonReturn);
+        }
+        $pet_to_validate = Pet::where('id', $request->petid)->first();
+        if($pet_to_validate->status != 0){
+            array_push($jsonReturn['error'], 'Pet '.$pet_to_validate->name.' it is not available for adoption, it status is: '.Helper::getPetStatus()[$pet_to_validate->status].'.<br>Pet last update: '.$pet_to_validate->updated_at->diffForHumans());
+            return response()->json($jsonReturn);
+        }
 
         try{
             DB::transaction(function() use ($request){
-        
-                $adopter = Adopter::firstOrCreate(
-    
-                    [
-                        'forename' => $request->forename, 
-                        'surname' => $request->surname, 
-                        'phone' => $request->phone, 
-                        'type' => $request->type
-                    ],
-    
-                    [
-                        'email' => $request->email, 
-                        'address' => $request->address,
-                        'age' => $request->age,
-                        'status' => 0
-                    ]
-                );
-                $adopter->email = $request->email;
-                $adopter->address = $request->address;
-                $adopter->age = $request->age;
+
+                $adopter = Adopter::where('id', $request->adopterid)->first();
+                
+                if( is_null($adopter) ) $adopter = new Adopter;
+
+                $adopter->forename = $request->forename;
+                $adopter->surname  = $request->surname;
+                $adopter->phone    = Helper::cleanPhoneNumber($request->phone);
+                $adopter->email    = $request->email;
+                $adopter->age      = $request->age;
+                $adopter->address  = $request->address;
+                $adopter->type     = $request->type;
                 $adopter->save();
     
                 $adoption = Adoption::create([

@@ -27,9 +27,9 @@
         <x-adminlte-card title=" New adoption request" theme="primary" icon="{{Helper::getAdoptionIcon()[0]}}">
             <form method="POST" id="formCreate" >
                 @csrf
-                <x-adminlte-input name="petid" id="petid" type="hidden" placeholder="" label-class="" value="{{$pet->id}}"></x-adminlte-input>
-                <x-adminlte-input name="adopterid" id="adopterid" type="hidden" placeholder="" label-class="" value=""></x-adminlte-input>
-                
+                <input name="petid" id="petid" type="hidden" placeholder="" label-class="" value="{{$pet->id}}"></input>
+                <input name="adopterid" id="adopterid" type="hidden" placeholder="" label-class="" value="-1"></input>
+                <div id="div-reset-adopter"></div>
                 {{-- Basic input --}}
                 <div class="row">
                     <div class="col">
@@ -125,7 +125,6 @@
     <script>
         var many_adopters;
         function fillAdopterForm( index=0 ){
-            console.log(many_adopters);
             
             $("#forename").val(many_adopters[index]['forename']);
             $("#surname").val(many_adopters[index]['surname']);
@@ -135,16 +134,38 @@
             $("#type").val(many_adopters[index]['type']);
             $("#address").val(many_adopters[index]['address']);
             $("#adopterid").val(many_adopters[index]['id']);
-            
 
-            console.log("is filled?");
-            console.log($("#forename").val());
             myHelper_toastInfoWithMessage("Done. Please fill the 'Adoption note'");
-            
+
+            $('#div-reset-adopter').empty();
+
+            var divAlert = '<div class="alert alert-info">';
+            divAlert += 'Any changes are going to update the data of '+many_adopters[index]['forename']+'. ';
+            divAlert += 'You can <button onclick="cleanAdopterForm()" type="button" class="btn btn-sm btn-outline-dark" id="btn-reset-form">Reset this form</button> if you want. </div>';
+
+            $('#div-reset-adopter').append(divAlert);
         }
-        $(document).ready( function () {
+
+        function cleanAdopterForm(){
+
+            $("#forename").val("");
+            $("#surname").val("");
+            $("#phone").val("");
+            $("#email").val("");
+            $("#age").val("");
+            $("#type").val("");
+            $("#address").val("");
+            $("#note").val("");
+            $("#adopterid").val("-1");
+
+            $("#inputSearch").val("");
+            $('#tableForManySearchResults').empty();
+            $('#div-reset-adopter').empty();
             
-            console.log(document.getElementById("formCreate").elements);
+            myHelper_toastInfoWithMessage("Done. Now the form is empty");
+        }
+
+        $(document).ready( function () {
             $('#btn-search-adopter').on('click', function(e){
                 e.preventDefault();
 
@@ -171,7 +192,7 @@
                 .done(function(response) {
                     if(response.success) {         
                         many_adopters = response.data;
-                        console.log(response.data);
+                        
                         if(response.data_count > 1){
                             table_many_results = "<table class='table table-sm m-0 table-hover' width='100%' id='table-matches'>";
                             table_many_results += "<caption class='text-danger'>"+"'"+$("#inputSearch").val()+"' matches with more than one result. Please select one adopter in the list and use de 'Actions' button to fill the form"+"</caption>";
@@ -228,24 +249,24 @@
                     $('#btn-save').html('<i class="{{Helper::getAdoptionIcon()[0]}}"></i> Request Adoption');
                 })
                 .done(function(response) {
-                    /*
                     if(response.success) {
-                                                
-                        $('#table-pet').DataTable().ajax.reload(null, false);
-                        $('#modalMin').modal('hide');
-                        $('#formCreate')[0].reset();                                    
-                            
+                        Swal.fire({
+                            title: "A request adoption was created for: "+$("#forename").val(),
+                            text: "Click 'OK' to return to the pets list",
+                            type: "success",
+                            confirmButtonText: 'OK',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.replace("/adoption/adopt");
+                            }
+                        });
                         
                     } else {
-                        swal.fire({
-                            title: 'Internal error',
-                            text: "Something went wrong",
-                            type: 'error',
-                            allowOutsideClick: false,
-                            confirmButtonText: 'OK',
-                        });
+                        myHelper_swalListArrErrors(response.error);
                     }
-                    */
+                    
                 })
                 .fail(function(response) {
                     swal.fire({
@@ -257,8 +278,6 @@
                     });
                 });
             });
-
-            
         });
     </script>
 @stop
