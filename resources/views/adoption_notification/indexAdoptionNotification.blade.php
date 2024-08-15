@@ -135,9 +135,11 @@
             "initComplete": function(settings, json) {
                 
                 if({{$id}} > 0){
+                    regExSearch = '^' + {{$id}} +'$';
+
                     dataTable
                     .column(12)
-                    .search({{$id}})
+                    .search(regExSearch, true, false)
                     .draw()
                 }
             }
