@@ -74,7 +74,7 @@ class NotificationController extends Controller
                 $item['icon'] = "<i class='mr-2 ".Helper::getAdoptionIcon()[$notificacion['status']]."'></i>";
                 $item['text'] = "<span class='text-sm mr-5'>".Helper::getAdoptionStatus()[$notificacion['status']]."</span>";
                 $item['time'] = "<span class='float-right badge badge-light text-muted text-xs ml-5'>".\Carbon\Carbon::parse($notificacion['created_at'])->diffForHumans()."</span>";
-                $dropdownHtml .= "<a href='/adoption-notification/".$notificacion['id']."' class='dropdown-item dropdown-item-xl'>".$item['icon'].$item['text'].$item['time']."</a>";
+                $dropdownHtml .= "<a href='/notifications/adoption-notifications/".$notificacion['id']."' class='dropdown-item dropdown-item-xl'>".$item['icon'].$item['text'].$item['time']."</a>";
                 return [
                     'label'       => count($todayNotifications),
                     'label_color' => 'primary',

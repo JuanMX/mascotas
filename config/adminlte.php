@@ -299,6 +299,23 @@ return [
         ],
         */
         [
+            'type' => 'navbar-notification',
+            'id' => 'adoption-notification',                // An ID attribute (required).
+            'icon' => 'fas fa-hand-holding-heart',                  // A font awesome icon (required).
+            'icon_color' => 'dark',                // The initial icon color (optional).
+            'label' => 0,                             // The initial label for the badge (optional).
+            'label_color' => 'primary',                // The initial badge color (optional).
+            'url' => '/adoption-notification',            // The url to access all notifications/elements (required).
+            'topnav_right' => true,                   // Or "topnav => true" to place on the left (required).
+            'dropdown_mode' => true,                  // Enables the dropdown mode (optional).
+            'dropdown_flabel' => 'All notifications of the day', // The label for the dropdown footer link (optional).
+            'classes' => 'dropdown-menu-xl',
+            'update_cfg' => [
+                'url' => '/notifications/fetch-adoption-notifications',         // The url to periodically fetch new data (optional).
+                'period' => 120,                       // The update period for get new data (in seconds, optional).
+            ],
+        ],
+        [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
             'key'          => 'fullscreen-widget'
