@@ -33,7 +33,7 @@ class AdopterController extends Controller
         
         $jsonReturn = array('success'=>false, 'data'=>[], 'data_count'=>0,'message'=>'');
 
-        $phone_number = preg_replace("/[^0-9]/", "", $request->inputSearch); //myTODO use the Helper
+        $phone_number = Helper::cleanPhoneNumber($request->inputSearch);
 
         $query = Adopter::orWhere('email', $request->inputSearch)->orWhere('phone', $phone_number)->orWhere('surname', 'like', '%'.$request->inputSearch.'%')->get();
         
