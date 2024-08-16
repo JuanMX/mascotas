@@ -31,16 +31,25 @@ class EventServiceProvider extends ServiceProvider
     {
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
 
-            $items = Adoption::all()->map(function (Adoption $notificacion) {
-                return [
-                    'text' => Helper::getAdoptionStatus()[$notificacion['status']],
-                    'url' => "adoption-notification/".$notificacion['id'],
-                    'icon' => Helper::getAdoptionIcon()[$notificacion['status']].' mr-2',
-                    'label' => $notificacion['created_at']->diffForHumans(),
-                    'label_color' => (Carbon::parse($notificacion['created_at'])->isToday() ? 'success' : 'light text-muted') . ' float-right',
-                    'created_at' => $notificacion['created_at'],
+            $notifications = Adoption::latest()->skip(0)->take(17)->get();
+
+            $notification_items = [];
+            foreach($notifications as $notification){
+                $item = [
+                    'text' => '',
+                    'url' => '',
+                    'icon' => '',
+                    'label' => '',
+                    'label_color' => '',
                 ];
-            })->sortBy(['created_at','desc'])->skip(0)->take(15);
+                $item['text'] = Helper::getAdoptionStatus()[$notification->status];
+                $item['url'] = "/notifications/adoption-notifications/".$notification->id;
+                $item['icon'] = Helper::getAdoptionIcon()[$notification->status].' mr-2 '.Helper::getAdoptionTextColor()[$notification->status];
+                $item['label'] = $notification->created_at->diffForHumans();
+                $item['label_color'] = (Carbon::parse($notification->created_at)->isToday() ? 'success' : 'light text-muted') . ' float-right';
+                
+                array_push($notification_items,$item);
+            }
 
             $event->menu->addBefore('fullscreen-widget',[
                 'text'        => '',
@@ -58,11 +67,11 @@ class EventServiceProvider extends ServiceProvider
                 'classes' => 'dropdown-menu-xl dropdown-header',
             ]);
 
-            $event->menu->addIn('navbar-notifications', ...$items);
+            $event->menu->addIn('navbar-notifications', ...$notification_items);
 
             $event->menu->addIn('navbar-notifications', [
                 'text' => 'View All',
-                'url' => 'adoption-notification',
+                'url' => '/notifications/adoption-notifications',
                 'classes' => 'dropdown-footer',
             ]);
             

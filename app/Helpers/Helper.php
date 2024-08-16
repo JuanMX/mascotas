@@ -70,6 +70,25 @@ class Helper
 
         return $color;
     }
+
+    public static function getAdoptionTextColor(){
+
+        $color = [
+            0 => 'text-info',
+            1 => 'text-green',
+            2 => 'text-red',
+            3 => 'text-yellow',
+            4 => 'text-purple',
+            5 => 'text-red',
+            6 => 'text-red',
+            7 => 'text-orange',
+            8 => 'text-orange',
+            9 => 'text-info',
+        ];
+
+        return $color;
+    }
+
     public static function getAdoptionIcon(){
 
         $icon = [

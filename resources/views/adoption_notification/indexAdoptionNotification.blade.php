@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <div class="table-responsive">
+    <div class="table-responsive pb-5">
         <table class="table table-sm m-0 table-hover" id="table-notifications" width="100%">
             <thead>
                 <tr>
@@ -48,7 +48,7 @@
             "searching": true,       
             "ajax": {
                 type: "POST",
-                url: "/adoption-notification",
+                url: "/notifications/adoption-notifications",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

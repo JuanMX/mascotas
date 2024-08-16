@@ -7,6 +7,7 @@ use App\Http\Controllers\AdoptionController;
 use App\Http\Controllers\SimpleCatalogueController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdoptionNotificationController;
+use App\Http\Controllers\NotificationController;
 
 use App\Mail\AdoptionDeliberation;
 
@@ -90,5 +91,9 @@ Route::prefix('adopter')->group(function () {
     Route::post('/adopter-search-field', [AdopterController::class, 'adopterSearchField']);
 });
 
-Route::get('/adoption-notification/{id?}', [AdoptionNotificationController::class, 'index']);
-Route::post('/adoption-notification', [AdoptionNotificationController::class, 'read']);
+Route::prefix('notifications')->group(function () {
+    Route::get('/adoption-notifications/{id?}', [NotificationController::class, 'adoptionNotificationIndex']);
+    Route::post('/adoption-notifications', [NotificationController::class, 'adoptionNotificationDataTable']);
+    
+    Route::get('/fetch-adoption-notifications', [NotificationController::class, 'fetchAdoptionNotifications']);
+});
